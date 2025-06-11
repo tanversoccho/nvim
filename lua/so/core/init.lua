@@ -1,0 +1,6 @@
+require('so.core.fix')
+require('so.core.autocmd')
+require('so.core.keymaps')
+require('so.core.options')
+require('so.core.windows')
+-- require('so.core.color')
