@@ -3,14 +3,12 @@ return {
     event = 'VimEnter',
     dependencies = {
         'nvim-lua/plenary.nvim',
-        {
-            'nvim-telescope/telescope-fzf-native.nvim',
-            build = 'make',
-            cond = function()
-                return vim.fn.executable 'make' == 1
-            end,
-        },
-        { 'nvim-telescope/telescope-ui-select.nvim' },
+
+        -- {
+        --     'nvim-telescope/telescope-fzf-native.nvim',
+        --     build = 'make',
+        -- },
+        -- { 'nvim-telescope/telescope-ui-select.nvim' },
         {
             'benfowler/telescope-luasnip.nvim',
             dependencies = {
@@ -64,10 +62,10 @@ return {
             },
         }
 
-        require('telescope').load_extension( 'fzf')
-        require('telescope').load_extension( 'ui-select')
+        -- require('telescope').load_extension( 'fzf')
+        -- require('telescope').load_extension( 'ui-select')
         require('telescope').load_extension('luasnip')
-        -- require("telescope").load_extension("noice")
+        require("telescope").load_extension("noice")
 
         local builtin = require 'telescope.builtin'
         vim.keymap.set('n', '<leader><leader>', builtin.builtin, { desc = 'Telescope' })
