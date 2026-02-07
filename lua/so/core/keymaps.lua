@@ -13,6 +13,7 @@ vim.keymap.set("n", "<space>e", "<cmd>Neotree toggle<CR>")
 vim.keymap.set({'v','n'}, ':', ';', { desc = 'Enter command line' })
 vim.keymap.set({'v','n'}, ';', ':', { desc = 'Repeat f/t motion' })
 
+vim.keymap.set("n", "<leader>=", "gg=G", { desc = "Reindent whole file" })
 
 vim.keymap.set('n', '<leader>q', function()
   for _, win in ipairs(vim.fn.getwininfo()) do
