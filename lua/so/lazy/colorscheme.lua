@@ -16,25 +16,17 @@ return {
     opts = {
       style = "night",          -- Use the "night" variant
       transparent = true,       -- Make the main editor background transparent
-
       styles = {
         sidebars = "transparent",
         floats = "transparent",
       },
-      on_colors = function(c)
-        c.bg_statusline = "#000000"
-      end,
-      -- 2. Override specific highlight groups for the tabline
-      on_highlights = function(hl, c)
-        hl.TabLine = { bg = "#000000", fg = c.fg_dark }
-        hl.TabLineFill = { bg = "#000000" }
-        hl.TabLineSel = { bg = "#24283b", fg = c.fg } -- Active tab slightly lighter for visibility
-        -- Fix cursor line transparency if it's still too faint
-        hl.CursorLine = { bg = "#1a1b26" }
-      end,    },
-      config = function(_, opts)
-        require("tokyonight").setup(opts)
-        vim.cmd.colorscheme("tokyonight-night")
+      on_colors = function(colors)
+        colors.bg_statusline = colors.none -- To check if its working try something like "#ff00ff" instead of colors.none
       end,
     },
-  }
+    config = function(_, opts)
+      require("tokyonight").setup(opts)
+      vim.cmd.colorscheme("tokyonight-night")
+    end,
+  },
+}
