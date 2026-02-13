@@ -1,13 +1,15 @@
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.maplocalleader = "\\"
 
 vim.g.have_nerd_font = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
 
+vim.opt.cursorline = true
+vim.api.nvim_set_hl(0, "CursorLine", { link = "Normal" })
+-- vim.api.nvim_set_hl(0, "CursorLine", {default=true, blend=99})
 -- vim.opt.termguicolor = true
-
 vim.o.mouse = 'a'
 
 vim.o.showmode = false

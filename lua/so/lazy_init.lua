@@ -9,9 +9,6 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
 require("lazy").setup({
   spec = "so.lazy",
   change_detection = { notify = false },

@@ -20,7 +20,12 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     vim.opt_local.cursorline = false
   end,
 })
-
+vim.api.nvim_create_autocmd("ColorScheme", {
+    pattern = "*",
+    callback = function()
+        vim.api.nvim_set_hl(0, "CursorLine", { link = "Normal" })
+    end,
+})
 -- ide like highlight when stopping cursor
 vim.api.nvim_create_autocmd("CursorMoved", {
   group = vim.api.nvim_create_augroup("LspReferenceHighlight", { clear = true }),

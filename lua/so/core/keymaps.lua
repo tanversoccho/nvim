@@ -2,18 +2,22 @@
 -- vim.keymap.set("n", "<space>x", ":.lua<CR>")
 -- vim.keymap.set("v", "<space>x", ":lua<CR>")
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set("n", "<space>x", "<cmd>source %<CR>")
+vim.keymap.set("n", "<leader>x", "<cmd>source %<CR>")
 
 
-vim.keymap.set('n', '<space>i', '<cmd>InspectTree<CR>')
+vim.keymap.set('n', '<leader>i', '<cmd>InspectTree<CR>')
 
-vim.keymap.set("n", "<space>e", "<cmd>Neotree toggle<CR>")
+vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>")
 
 -- Swap : and ; in Normal mode
 vim.keymap.set({'v','n'}, ':', ';', { desc = 'Enter command line' })
 vim.keymap.set({'v','n'}, ';', ':', { desc = 'Repeat f/t motion' })
 
-vim.keymap.set("n", "<leader>=", "gg=G", { desc = "Reindent whole file" })
+vim.keymap.set("n", "\\=", function()
+  local view = vim.fn.winsaveview()
+  vim.cmd("normal! gg=G")
+  vim.fn.winrestview(view)
+end, { desc = "Reindent whole file (keep cursor)" })
 
 vim.keymap.set('n', '<leader>q', function()
   for _, win in ipairs(vim.fn.getwininfo()) do
