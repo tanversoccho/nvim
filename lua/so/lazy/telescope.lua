@@ -72,7 +72,7 @@ return {
     vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[K]eymaps' })
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[H]elp' })
     vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = 'Grep [W]ord' })
-    vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live [G]rep' })
+    vim.keymap.set('n', '<leader>rg', builtin.live_grep, { desc = 'Live [G]rep' })
     vim.keymap.set('n', '<leader>fq', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
     vim.keymap.set('n', '<leader>ff', builtin.resume, { desc = 'telescope [R]esume' })
     vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = 'Recent Files' })
