@@ -2,15 +2,35 @@ return {
   {
     "OXY2DEV/markview.nvim", lazy = false,
   },
-  -- {
-  --   "iamcco/markdown-preview.nvim",
-  --   cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-  --   build = "cd app && yarn install",
-  --   init = function()
-  --     vim.g.mkdp_filetypes = { "markdown" }
-  --   end,
-  --   ft = { "markdown" },
-  -- },
+  {
+    "lervag/vimtex",
+    lazy = false,
+    init = function()
+      -- Use the generic viewer (required for SumatraPDF on Windows)
+      vim.g.vimtex_view_method = "general"
+
+      -- Path to SumatraPDF executable
+      vim.g.vimtex_view_general_viewer = "SumatraPDF.exe"
+
+      -- Viewer options: reuse window + forward search
+      -- @pdf = PDF file, @tex = source, @line = current line
+      vim.g.vimtex_view_general_options = "-reuse-instance -forward-search @tex @line @pdf"
+
+      -- Compiler configuration (latexmk)
+      vim.g.vimtex_compiler_latexmk = {
+        build_dir = "",
+        callback = 1,
+        continuous = 1,
+        executable = "latexmk",
+        options = {
+          "-pdf",
+          "-interaction=nonstopmode",
+          "-synctex=1",
+          "-file-line-error"
+        },
+      }
+    end,
+  },
   {
     "selimacerbas/markdown-preview.nvim",
     dependencies = { "selimacerbas/live-server.nvim" },

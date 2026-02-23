@@ -1,5 +1,15 @@
+-- ✅ FIX JSX / TSX filetypes (VERY IMPORTANT)
+vim.filetype.add({
+  extension = {
+    jsx = "javascriptreact",
+    tsx = "typescriptreact",
+  },
+})
+
 return {
-  -- CMP BLOCK HERE
+  -- =========================
+  -- CMP (AUTOCOMPLETE)
+  -- =========================
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
@@ -12,8 +22,8 @@ return {
       {
         "L3MON4D3/LuaSnip",
         build = (vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0)
-        and nil
-        or "make install_jsregexp",
+          and nil
+          or "make install_jsregexp",
         dependencies = { "rafamadriz/friendly-snippets" },
         config = function()
           require("luasnip.loaders.from_vscode").lazy_load()
@@ -28,9 +38,9 @@ return {
       local has_words_before = function()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0
-        and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
-        :sub(col, col)
-        :match("%s") == nil
+          and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
+            :sub(col, col)
+            :match("%s") == nil
       end
 
       cmp.setup({
@@ -52,7 +62,6 @@ return {
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
-
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
 
           ["<Tab>"] = cmp.mapping(function(fallback)
@@ -86,13 +95,13 @@ return {
         }),
       })
 
-      -- Search `/`
+      -- `/` search
       cmp.setup.cmdline("/", {
         mapping = cmp.mapping.preset.cmdline(),
         sources = { { name = "buffer" } },
       })
 
-      -- Command `:`
+      -- `:` command
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources(
@@ -103,7 +112,9 @@ return {
     end,
   },
 
-  -- LSP BLOCK HERE
+  -- =========================
+  -- LSP CONFIG
+  -- =========================
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -131,13 +142,12 @@ return {
 
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+      -- ✅ SERVERS
       local servers = {
         lua_ls = {
           settings = {
             Lua = {
-              runtime = {
-                version = "LuaJIT",
-              },
+              runtime = { version = "LuaJIT" },
               completion = { callSnippet = "Replace" },
               diagnostics = { globals = { "vim" } },
               workspace = {
@@ -152,9 +162,20 @@ return {
           },
         },
 
-        -- Add more servers here
-        -- pyright = {},
-        -- tsserver = {},
+        -- ✅ AST-GREP (FIXED)
+        ast_grep = {
+          filetypes = {
+            "javascript",
+            "typescript",
+            "javascriptreact",
+            "typescriptreact",
+            "html",
+            "css",
+          },
+        },
+
+        -- ✅ RECOMMENDED FOR JSX/TSX
+        ts_ls = {},
       }
 
       require("mason").setup()
@@ -174,5 +195,4 @@ return {
       })
     end,
   },
-
 }
