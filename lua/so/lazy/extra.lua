@@ -75,7 +75,9 @@ return {
   {
     'stevearc/oil.nvim',
     opts = {
-      hidden = true,
+      view_options = {
+        show_hidden = true,  -- This shows hidden files (like .config, .gitignore)
+      },
       vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
     },
     dependencies = { "nvim-tree/nvim-web-devicons" },
