@@ -106,5 +106,11 @@ return {
         },
       })
     end,
+  },
+
+  {
+    "catgoose/nvim-colorizer.lua",
+    event = "BufReadPre",
+    opts = {},
   }
 }
