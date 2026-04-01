@@ -1,26 +1,23 @@
+---@diagnostic disable: undefined-global
 --Options{{{
 
 --globals{{{
 vim.g.mapleader = ' '
 vim.g.maplocalleader = "\\"
-vim.g.have_nerd_font = true
--- }}}
+vim.g.have_nerd_font = true -- }}}
 -- Styles{{{
 -- vim.go.statusline = "FILE %t %m %= |%Y|%l,%v"
 vim.o.showmode = true
-vim.opt.termguicolors = true
--- }}}
+vim.opt.termguicolors = true -- }}}
 --global fix{{{
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
-vim.g.loaded_ruby_provider = 0
--- }}}
+vim.g.loaded_ruby_provider = 0 -- }}}
 --basic options{{{
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
-vim.opt.wrap = false
--- }}}
+vim.opt.wrap = false -- }}}
 vim.o.mouse = 'a'
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
@@ -37,13 +34,12 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
-
 --Tabbing / Indentation{{{
-vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
--- }}}
+  vim.opt.tabstop = 2
+  vim.opt.softtabstop = 2
+  vim.opt.shiftwidth = 2
+  vim.opt.expandtab = true -- }}}
+
 vim.o.list = true
 vim.opt.listchars = {
   tab = '→ ',      -- Use arrow for tabs
@@ -57,12 +53,10 @@ vim.o.confirm = true
 
 -- Completion menu settings{{{
 vim.opt.completeopt = 'menu,menuone,noselect'
-vim.opt.isfname:append(":")
--- }}}
+vim.opt.isfname:append(":") -- }}}
 -- Fold settings{{{
-vim.opt.foldmethod = "marker"
--- }}}
--- }}}
+vim.opt.foldmethod = "marker" -- }}} 
+--}}}
 --keymaps{{{
 
 local map = vim.keymap
@@ -108,31 +102,145 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
--- }}}
--- plugins{{{
 
+-- show cursorline only in active window enable
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  group = vim.api.nvim_create_augroup("active_cursorline", { clear = true }),
+  callback = function()
+    vim.opt_local.cursorline = true
+  end,
+})
+
+-- show cursorline only in active window disable
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+  group = "active_cursorline",
+  callback = function()
+    vim.opt_local.cursorline = false
+  end,
+})
+
+-- }}}
 -- packages{{{
 vim.pack.add({
-  'https://github.com/stevearc/oil.nvim',
-  'https://github.com/nvim-tree/nvim-web-devicons',
+  "https://github.com/MunifTanjim/nui.nvim",
+  "https://github.com/OXY2DEV/markview.nvim",
+  "https://github.com/folke/todo-comments.nvim",
   "https://github.com/folke/tokyonight.nvim",
+  "https://github.com/kdheepak/lazygit.nvim",
+  "https://github.com/lervag/vimtex",
+  "https://github.com/lukas-reineke/indent-blankline.nvim",
+  "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/nvim-neo-tree/neo-tree.nvim",
   "https://github.com/rose-pine/neovim",
-  'https://github.com/neovim/nvim-lspconfig',
-  'https://github.com/norcalli/nvim-colorizer.lua',
-})
--- }}}
--- setup {{{
+  "https://github.com/selimacerbas/markdown-preview.nvim",
+  "https://github.com/echasnovski/mini.nvim",
+  "https://github.com/tpope/vim-dadbod",
+  "https://github.com/kristijanhusak/vim-dadbod-completion",
+  "https://github.com/kristijanhusak/vim-dadbod-ui",
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/norcalli/nvim-colorizer.lua",
+  "https://github.com/nvim-tree/nvim-web-devicons",
+  "https://github.com/stevearc/oil.nvim",
+  "https://github.com/nvim-treesitter/nvim-treesitter",
+  "https://github.com/neovim/nvim-lspconfig",
+  "https://github.com/mason-org/mason.nvim",
+  "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/mason-org/mason-lspconfig.nvim",
+  "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+}) -- }}}
 
--- oil {{{
-require("oil").setup({
+require("oil").setup({-- {{{
   view_options = {
     show_hidden = true,
   },
   map.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-})
--- }}}
+}) -- }}}
+
+require("mason").setup()
+
 -- require('colorizer').setup()
 
--- }}}
+require('telescope').setup({-- {{{
+  defaults = {
+    sorting_strategy = "ascending",
+    layout_config = {
+      prompt_position = 'top',
+    },
+  },
 
--- }}}
+  pickers = {
+    jumplist = {
+      layout_strategy = 'vertical',
+      layout_config = {
+        mirror = true,
+        width = 0.62,
+      },
+    },
+
+    marks = {
+      layout_strategy = 'vertical',
+      layout_config = {
+        mirror = true,
+        width = 0.62,
+      },
+    },
+    buffers = {
+      layout_strategy = 'vertical',
+      layout_config = {
+        mirror = true,
+        width = 0.62,
+      },
+    },
+  },
+  extensions = {
+    ['ui-select'] = {
+      require('telescope.themes').get_dropdown(),
+    },
+    -- zoxide = {
+      --   -- your config here
+      -- }
+    },
+  })-- }}}
+-- telescope keymap{{{
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader><leader>', builtin.builtin, { desc = 'Telescope' })
+vim.keymap.set('n', '<leader>fd', builtin.find_files, { desc = '[F]iles' })
+vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[K]eymaps' })
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[H]elp' })
+vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = 'Grep [W]ord' })
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live [G]rep' })
+vim.keymap.set('n', '<leader>fq', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>ff', builtin.resume, { desc = 'telescope [R]esume' })
+vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = 'Recent Files' })
+vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'buffers' })
+-- Jumplist
+vim.keymap.set('n', '<leader>j', builtin.jumplist, { desc = 'Jumplist' })
+-- Changelist
+-- vim.keymap.set('n', '<leader>c', builtin.changelist, { desc = 'Changelist' })
+-- Registers
+vim.keymap.set('n', '<leader>r', builtin.registers, { desc = 'Registers' })
+vim.keymap.set('n', "'", builtin.marks, { desc = 'Marks' })
+vim.keymap.set('n', '<leader>fs', function()
+  require('telescope').extensions.luasnip.luasnip()
+end, { desc = '[F]ind [S]nippets' })
+
+vim.keymap.set('n', '<leader>f/', function()
+  builtin.live_grep {
+    grep_open_files = true,
+    prompt_title = 'Live Grep in Open Files',
+  }
+end, { desc = '[/] in Open Files' })
+
+vim.keymap.set('n', '<leader>fn', function()
+  builtin.find_files { cwd = vim.fn.stdpath 'config' }
+end, { desc = '[N]vim config files' })-- }}}
+require("mason-lspconfig").setup({-- {{{
+  handlers = {
+    function(server_name)
+      local server = servers[server_name] or {}
+      server.capabilities = capabilities
+      require("lspconfig")[server_name].setup(server)
+    end,
+  }
+})-- }}}
+
