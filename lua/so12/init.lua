@@ -1,46 +1,49 @@
----@diagnostic disable: undefined-global
 --Options{{{
 
---globals{{{
+--globals
 vim.g.mapleader = ' '
 vim.g.maplocalleader = "\\"
-vim.g.have_nerd_font = true -- }}}
--- Styles{{{
--- vim.go.statusline = "FILE %t %m %= |%Y|%l,%v"
-vim.o.showmode = true
-vim.opt.termguicolors = true -- }}}
---global fix{{{
+vim.g.have_nerd_font = true
+--global fix
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
-vim.g.loaded_ruby_provider = 0 -- }}}
---basic options{{{
-vim.opt.number = true
-vim.opt.relativenumber = true
+vim.g.loaded_ruby_provider = 0
+
+-- Styles
+-- vim.go.statusline = "FILE %t %m %= |%Y|%l,%v"
+--basic options
+vim.opt.breakindent = true
 vim.opt.cursorline = true
-vim.opt.wrap = false -- }}}
-vim.o.mouse = 'a'
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
-vim.o.breakindent = true
-vim.o.undofile = true
+vim.opt.ignorecase = true
+vim.opt.number = true
+vim.opt.relativenumber = false
+vim.opt.showmode = true
+vim.opt.smartcase = true
+vim.opt.termguicolors = true
+vim.opt.undofile = true
+vim.opt.wildmenu = true
+vim.opt.wrap = false
+vim.opt.expandtab = true
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.confirm = true
+vim.opt.list = true
+vim.opt.mouse = 'a'
+vim.opt.clipboard = 'unnamedplus'
+vim.opt.winborder = 'rounded'
+vim.opt.pumborder = "rounded"
+vim.opt.path:append("**")
+vim.opt.wildoptions = { "pum", "fuzzy" }
+vim.opt.wildmode = "noselect:full"
 
--- Search Settings
-vim.o.ignorecase = true
-vim.o.smartcase = true
+vim.opt.signcolumn = 'yes'
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
 
-vim.o.signcolumn = 'yes'
-vim.o.updatetime = 250
-vim.o.timeoutlen = 300
-vim.o.splitright = true
-vim.o.splitbelow = true
---Tabbing / Indentation{{{
-  vim.opt.tabstop = 2
-  vim.opt.softtabstop = 2
-  vim.opt.shiftwidth = 2
-  vim.opt.expandtab = true -- }}}
-
-vim.o.list = true
+vim.opt.isfname:append(":")
 vim.opt.listchars = {
   tab = '→ ',      -- Use arrow for tabs
   trail = '•',     -- Bullet point for trailing spaces
@@ -48,14 +51,10 @@ vim.opt.listchars = {
   extends = '↪',   -- Line wrap indicator
   precedes = '↩',  -- Line wrap indicator
 }
-vim.o.inccommand = 'split'
-vim.o.confirm = true
-
--- Completion menu settings{{{
+vim.opt.inccommand = 'split'
+vim.opt.foldmethod = "marker"
 vim.opt.completeopt = 'menu,menuone,noselect'
-vim.opt.isfname:append(":") -- }}}
--- Fold settings{{{
-vim.opt.foldmethod = "marker" -- }}} 
+
 --}}}
 --keymaps{{{
 
@@ -122,44 +121,47 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
 -- }}}
 -- packages{{{
 vim.pack.add({
-  "https://github.com/MunifTanjim/nui.nvim",
-  "https://github.com/OXY2DEV/markview.nvim",
-  "https://github.com/folke/todo-comments.nvim",
-  "https://github.com/folke/tokyonight.nvim",
-  "https://github.com/kdheepak/lazygit.nvim",
-  "https://github.com/lervag/vimtex",
-  "https://github.com/lukas-reineke/indent-blankline.nvim",
-  "https://github.com/nvim-lua/plenary.nvim",
-  "https://github.com/nvim-neo-tree/neo-tree.nvim",
   "https://github.com/rose-pine/neovim",
+  "https://github.com/folke/tokyonight.nvim",
+  "https://github.com/folke/todo-comments.nvim",
+  "https://github.com/MunifTanjim/nui.nvim",
   "https://github.com/selimacerbas/markdown-preview.nvim",
+  "https://github.com/OXY2DEV/markview.nvim",
+  "https://github.com/lervag/vimtex",
+  "https://github.com/kdheepak/lazygit.nvim",
+  "https://github.com/lukas-reineke/indent-blankline.nvim",
+  "https://github.com/nvim-neo-tree/neo-tree.nvim",
   "https://github.com/echasnovski/mini.nvim",
   "https://github.com/tpope/vim-dadbod",
   "https://github.com/kristijanhusak/vim-dadbod-completion",
   "https://github.com/kristijanhusak/vim-dadbod-ui",
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/norcalli/nvim-colorizer.lua",
-  "https://github.com/nvim-tree/nvim-web-devicons",
   "https://github.com/stevearc/oil.nvim",
-  "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/neovim/nvim-lspconfig",
-  "https://github.com/mason-org/mason.nvim",
+  "https://github.com/nvim-tree/nvim-web-devicons",
   "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/nvim-treesitter/nvim-treesitter",
+  "https://github.com/mason-org/mason.nvim",
   "https://github.com/mason-org/mason-lspconfig.nvim",
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+  "https://github.com/hrsh7th/nvim-cmp",
+  "https://github.com/hrsh7th/cmp-nvim-lsp",
+  "https://github.com/hrsh7th/cmp-buffer",
+  "https://github.com/hrsh7th/cmp-path",
+  "https://github.com/hrsh7th/cmp-cmdline",
+  "https://github.com/saadparwaiz1/cmp_luasnip",
+  "https://github.com/L3MON4D3/LuaSnip",
+  "https://github.com/folke/lazydev.nvim",
 }) -- }}}
-
+-- require('colorizer').setup()
 require("oil").setup({-- {{{
   view_options = {
     show_hidden = true,
   },
   map.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-}) -- }}}
-
-require("mason").setup()
-
--- require('colorizer').setup()
-
+})-- }}}
 require('telescope').setup({-- {{{
   defaults = {
     sorting_strategy = "ascending",
@@ -213,13 +215,9 @@ vim.keymap.set('n', '<leader>fq', builtin.diagnostics, { desc = '[S]earch [D]iag
 vim.keymap.set('n', '<leader>ff', builtin.resume, { desc = 'telescope [R]esume' })
 vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = 'Recent Files' })
 vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'buffers' })
--- Jumplist
 vim.keymap.set('n', '<leader>j', builtin.jumplist, { desc = 'Jumplist' })
--- Changelist
--- vim.keymap.set('n', '<leader>c', builtin.changelist, { desc = 'Changelist' })
--- Registers
 vim.keymap.set('n', '<leader>r', builtin.registers, { desc = 'Registers' })
-vim.keymap.set('n', "'", builtin.marks, { desc = 'Marks' })
+vim.keymap.set('n', '<leader>m', builtin.marks, { desc = 'Marks' })
 vim.keymap.set('n', '<leader>fs', function()
   require('telescope').extensions.luasnip.luasnip()
 end, { desc = '[F]ind [S]nippets' })
@@ -234,7 +232,41 @@ end, { desc = '[/] in Open Files' })
 vim.keymap.set('n', '<leader>fn', function()
   builtin.find_files { cwd = vim.fn.stdpath 'config' }
 end, { desc = '[N]vim config files' })-- }}}
-require("mason-lspconfig").setup({-- {{{
+require("mason").setup()-- {{{
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+local servers = {
+  lua_ls = {
+    settings = {
+      Lua = {
+        runtime = { version = "LuaJIT" },
+        completion = { callSnippet = "Replace" },
+        diagnostics = { globals = { "vim" } },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            vim.env.VIMRUNTIME,
+            vim.fn.stdpath("config") .. "/lua",
+          },
+        },
+        telemetry = { enable = false },
+      },
+    },
+  },
+  ast_grep = {
+    filetypes = {
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "html",
+      "css",
+    },
+  },
+  ts_ls = {},
+}
+require("mason-lspconfig").setup({
+
   handlers = {
     function(server_name)
       local server = servers[server_name] or {}
@@ -243,4 +275,3 @@ require("mason-lspconfig").setup({-- {{{
     end,
   }
 })-- }}}
-

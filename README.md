@@ -32,7 +32,7 @@ in fresh machine i need
 after install lua51 luarocks
 needed to run 
 
-```` pwsh 
+```` pwsh
 scoop reset lua51
 scoop reset luarocks
 ````
