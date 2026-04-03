@@ -1,5 +1,4 @@
 --Options{{{
-
 --globals
 vim.g.mapleader = ' '
 vim.g.maplocalleader = "\\"
@@ -55,6 +54,21 @@ vim.opt.inccommand = 'split'
 vim.opt.foldmethod = "marker"
 vim.opt.completeopt = 'menu,menuone,noselect'
 
+vim.lsp.inlay_hint.enable(true)
+
+-- Enable diagnostic signs in gutter
+vim.diagnostic.config({
+  virtual_text = true,  -- Shows warnings inline
+  signs = true,         -- Shows icons in gutter
+  underline = true,     -- Underlines the issue
+  update_in_insert = false,
+  severity_sort = true,
+})
+-- Set diagnostic symbols (optional but nice)
+vim.fn.sign_define("DiagnosticSignError", { text = "✘", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "⚠", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 --}}}
 --keymaps{{{
 
@@ -76,6 +90,8 @@ map.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 map.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 map.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 -- }}}
+map.set("v", "<", "<gv^")
+map.set("v", ">", ">gv^")
 -- Move Lines{{{
 map.set("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
 map.set("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
@@ -118,11 +134,50 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
   end,
 })
 
+-- Enable inlay hints globally
+vim.lsp.inlay_hint.enable(true)
+
+-- Auto commands for LSP
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
+  callback = function(args)
+    -- Ensure inlay hints are enabled for this buffer
+    vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+    -- Keymaps
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = args.buf })
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf })
+    vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { buffer = args.buf })
+  end,
+})
+-- Example: Lua LSP (lua-language-server must be installed)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'lua',
+  callback = function()
+    vim.lsp.start({
+      name = 'lua_ls',
+      cmd = { 'lua-language-server' },
+      root_dir = vim.fs.dirname(vim.fs.find({ '.git', 'init.lua' }, { upward = true })[1]),
+      settings = {
+        Lua = {
+          runtime = { version = 'LuaJIT' },
+          diagnostics = { globals = { 'vim' } },
+          workspace = {
+            library = vim.api.nvim_get_runtime_file('', true),
+            checkThirdParty = false,
+          },
+          telemetry = { enable = false },
+          hint = { enable = true },  -- Enable Lua hints
+        },
+      },
+    })
+  end,
+})
 -- }}}
 -- packages{{{
 vim.pack.add({
   "https://github.com/rose-pine/neovim",
   "https://github.com/folke/tokyonight.nvim",
+
   "https://github.com/folke/todo-comments.nvim",
   "https://github.com/MunifTanjim/nui.nvim",
   "https://github.com/selimacerbas/markdown-preview.nvim",
@@ -138,14 +193,16 @@ vim.pack.add({
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/norcalli/nvim-colorizer.lua",
   "https://github.com/stevearc/oil.nvim",
-  "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/nvim-tree/nvim-web-devicons",
   "https://github.com/nvim-telescope/telescope.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/nvim-treesitter/nvim-treesitter",
+
+  "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/mason-org/mason-lspconfig.nvim",
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+
   "https://github.com/hrsh7th/nvim-cmp",
   "https://github.com/hrsh7th/cmp-nvim-lsp",
   "https://github.com/hrsh7th/cmp-buffer",
@@ -161,6 +218,15 @@ require("oil").setup({-- {{{
     show_hidden = true,
   },
   map.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+})
+require('gitsigns').setup({
+  signs = {
+    add = { text = '+' },
+    change = { text = '~' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
+    changedelete = { text = '~' },
+  }
 })-- }}}
 require('telescope').setup({-- {{{
   defaults = {
@@ -232,7 +298,8 @@ end, { desc = '[/] in Open Files' })
 vim.keymap.set('n', '<leader>fn', function()
   builtin.find_files { cwd = vim.fn.stdpath 'config' }
 end, { desc = '[N]vim config files' })-- }}}
-require("mason").setup()-- {{{
+-- lsp config {{{
+require("mason").setup()
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local servers = {
