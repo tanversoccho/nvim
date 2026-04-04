@@ -11,22 +11,23 @@ vim.g.loaded_ruby_provider = 0
 -- Styles
 -- vim.go.statusline = "FILE %t %m %= |%Y|%l,%v"
 --basic options
-vim.opt.breakindent = true
-vim.opt.cursorline = true
-vim.opt.ignorecase = true
 vim.opt.number = true
 vim.opt.relativenumber = false
-vim.opt.showmode = true
+vim.opt.breakindent = true
+vim.opt.confirm = true
+vim.opt.cursorline = true
+vim.opt.expandtab = true
+vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.linebreak = true
+vim.opt.list = true
+vim.opt.showmode = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.wildmenu = true
 vim.opt.wrap = false
-vim.opt.expandtab = true
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-vim.opt.confirm = true
-vim.opt.list = true
 vim.opt.mouse = "a"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.winborder = "rounded"
@@ -36,11 +37,12 @@ vim.opt.wildoptions = { "pum", "fuzzy" }
 vim.opt.wildmode = "noselect:full"
 
 vim.opt.signcolumn = "yes"
-vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
-vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.scrolloff = 99
+vim.opt.tabstop = 2
+vim.opt.timeoutlen = 300
+vim.opt.updatetime = 250
 
 vim.opt.isfname:append(":")
 vim.opt.listchars = {
@@ -215,8 +217,10 @@ vim.pack.add({
 	"https://github.com/saadparwaiz1/cmp_luasnip",
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/folke/lazydev.nvim",
+  "https://github.com/rafamadriz/friendly-snippets",
 }) -- }}}
 -- require('colorizer').setup()
+vim.cmd("colorscheme tokyonight-night");
 require("oil").setup({ -- {{{
 	view_options = {
 		show_hidden = true,
@@ -274,6 +278,8 @@ require("telescope").setup({ -- {{{
 	},
 }) -- }}}
 -- telescope keymap{{{
+
+-- require('telescope').load_extension('luasnip')
 local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader><leader>", builtin.builtin, { desc = "Telescope" })
 vim.keymap.set("n", "<leader>fd", builtin.find_files, { desc = "[F]iles" })
@@ -299,11 +305,16 @@ vim.keymap.set("n", "<leader>f/", function()
 	})
 end, { desc = "[/] in Open Files" })
 
+vim.keymap.set("n", "<leader>fp", function()
+  builtin.find_files({
+    cwd = vim.fn.stdpath("data") .. "/site/pack/core/opt"
+  })
+end, { desc = "[P]ackage opt files" })
+
 vim.keymap.set("n", "<leader>fn", function()
 	builtin.find_files({ cwd = vim.fn.stdpath("config") })
 end, { desc = "[N]vim config files" }) -- }}}
 
-vim.cmd("colorscheme tokyonight-night");
 -- lsp config {{{
 
 require("mason").setup()
