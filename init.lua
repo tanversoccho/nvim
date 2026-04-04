@@ -1,2 +1,1 @@
--- require("so")
-require("so12")
+require("so")
