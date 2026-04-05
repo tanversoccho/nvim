@@ -1,3 +1,4 @@
+
 --Options{{{
 --globals
 vim.g.mapleader = " "
@@ -36,7 +37,7 @@ vim.opt.path:append("**")
 vim.opt.wildoptions = { "pum", "fuzzy" }
 vim.opt.wildmode = "noselect:full"
 
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "auto:2"
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.scrolloff = 99
@@ -56,11 +57,9 @@ vim.opt.inccommand = "split"
 vim.opt.foldmethod = "marker"
 vim.opt.completeopt = "menu,menuone,noselect"
 
-vim.lsp.inlay_hint.enable(true)
-
 -- Enable diagnostic signs in gutter
 vim.diagnostic.config({
-	virtual_text = true, -- Shows warnings inline
+	virtual_text = false, -- Shows warnings inline
 	signs = true, -- Shows icons in gutter
 	underline = true, -- Underlines the issue
 	update_in_insert = false,
@@ -76,40 +75,40 @@ vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSig
 
 --keymaps{{{
 
-local map = vim.keymap
+local map = vim.keymap.set
 -- fire{{{
-map.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-map.set({ "v", "n" }, ":", ";", { desc = "Enter command line" })
-map.set({ "v", "n" }, ";", ":", { desc = "Repeat f/t motion" })
-map.set("n", "\\=", function()
+map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+map({ "v", "n" }, ":", ";", { desc = "Enter command line" })
+map({ "v", "n" }, ";", ":", { desc = "Repeat f/t motion" })
+map("n", "\\=", function()
 	local view = vim.fn.winsaveview()
 	vim.cmd("normal! gg=G")
 	vim.fn.winrestview(view)
 end, { desc = "Reindent whole file (keep cursor)" })
 -- }}}
 --Window navigation{{{
-map.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-map.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-map.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-map.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-map.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+map("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+map("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+map("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+map("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 -- }}}
-map.set("v", "<", "<gv^")
-map.set("v", ">", ">gv^")
+map("v", "<", "<gv^")
+map("v", ">", ">gv^")
 -- Move Lines{{{
-map.set("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
-map.set("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
-map.set("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-map.set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-map.set("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
-map.set("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
+map("n", "<A-j>", "<cmd>execute 'move .+' . v:count0<cr>==", { desc = "Move Down" })
+map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
+map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
+map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
 
-map.set("n", "<A-down>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
-map.set("n", "<A-up>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
-map.set("i", "<A-down>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-map.set("i", "<A-up>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-map.set("v", "<A-down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
-map.set("v", "<A-up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
+map("n", "<A-down>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
+map("n", "<A-up>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
+map("i", "<A-down>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+map("i", "<A-up>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+map("v", "<A-down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
+map("v", "<A-up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
 -- }}}
 
 -- }}}
@@ -138,16 +137,15 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
 		vim.opt_local.cursorline = false
 	end,
 })
-
 -- Enable inlay hints globally
-vim.lsp.inlay_hint.enable(true)
+vim.lsp.inlay_hint.enable(false)
 
 -- Auto commands for LSP
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
 	callback = function(args)
 		-- Ensure inlay hints are enabled for this buffer
-		vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+		vim.lsp.inlay_hint.enable(false, { bufnr = args.buf })
 		-- Keymaps
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = args.buf })
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = args.buf })

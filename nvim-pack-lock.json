@@ -52,6 +52,10 @@
       "rev": "793b32e327bd51143d7cc345aa3ecd10c357ddee",
       "src": "https://github.com/selimacerbas/markdown-preview.nvim"
     },
+    "marks.nvim": {
+      "rev": "f353e8c08c50f39e99a9ed474172df7eddd89b72",
+      "src": "https://github.com/chentoast/marks.nvim"
+    },
     "markview.nvim": {
       "rev": "1861f959599ae03cfd59f56222a542035b0cd947",
       "src": "https://github.com/OXY2DEV/markview.nvim"
@@ -143,6 +147,10 @@
     "vimtex": {
       "rev": "9306903316c3ddd250676b7cf97c84a84c9c8f99",
       "src": "https://github.com/lervag/vimtex"
+    },
+    "which-key.nvim": {
+      "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
+      "src": "https://github.com/folke/which-key.nvim"
     }
   }
 }

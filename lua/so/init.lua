@@ -1,3 +1,4 @@
+
 require("so.core")
 
 -- packages{{{
@@ -42,12 +43,20 @@ vim.pack.add({
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/folke/lazydev.nvim",
   "https://github.com/rafamadriz/friendly-snippets",
+  "https://github.com/chentoast/marks.nvim",
+  "https://github.com/folke/which-key.nvim",
 }) -- }}}
 
 -- TODO: require('colorizer').setup()
 
 require('todo-comments').setup()
 
+require('which-key').setup()
+
+require('marks').setup({
+  builtin_marks = { ".", "<", ">", "^" },
+})
+vim.keymap.set('n', '<leader>ug', ':MarksToggleSigns<cr>', { noremap = true, silent = true })
 vim.cmd("colorscheme tokyonight-night");
 
 require("oil").setup({ -- {{{
@@ -66,6 +75,7 @@ require("gitsigns").setup({
 		changedelete = { text = "~" },
 	},
 }) -- }}}
+vim.keymap.set('n', '<leader>ug', ':Gitsigns toggle_signs<CR>', { noremap = true, silent = true })
 
 require("telescope").setup({ -- {{{
 	defaults = {
