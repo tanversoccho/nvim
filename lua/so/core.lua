@@ -37,7 +37,7 @@ vim.opt.path:append("**")
 vim.opt.wildoptions = { "pum", "fuzzy" }
 vim.opt.wildmode = "noselect:full"
 
-vim.opt.signcolumn = "auto:2"
+vim.opt.signcolumn = "yes"
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.scrolloff = 99
