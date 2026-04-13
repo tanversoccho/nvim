@@ -59,7 +59,7 @@ vim.opt.completeopt = "menu,menuone,noselect"
 
 -- Enable diagnostic signs in gutter
 vim.diagnostic.config({
-	virtual_text = false, -- Shows warnings inline
+	virtual_text = true, -- Shows warnings inline
 	signs = true, -- Shows icons in gutter
 	underline = true, -- Underlines the issue
 	update_in_insert = false,
