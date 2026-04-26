@@ -51,6 +51,8 @@ vim.pack.add({
 
 require('todo-comments').setup()
 
+require("so.mini")
+
 require('which-key').setup()
 
 require('marks').setup({
