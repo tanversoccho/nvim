@@ -26,6 +26,7 @@
   vim.opt.splitbelow = true
   vim.opt.splitright = true
   vim.opt.termguicolors = true
+  vim.opt.autocomplete = true
   vim.opt.undofile = true
   vim.opt.wildmenu = true
   vim.opt.wrap = false
