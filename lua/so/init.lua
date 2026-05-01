@@ -1,6 +1,3 @@
-
-require("so.core")
-
 -- packages{{{
 vim.pack.add({
 	"https://github.com/rose-pine/neovim",
