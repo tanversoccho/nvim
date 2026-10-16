@@ -1,4 +1,12 @@
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+-- Mason must be configured before the LSP bridge, regardless of loader order.
+require("so.plugins.mason")
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- Use Blink's capabilities when available; no dependency on cmp-nvim-lsp.
+local ok, blink = pcall(require, "blink.cmp")
+if ok then capabilities = blink.get_lsp_capabilities(capabilities) end
+vim.lsp.config("*", { capabilities = capabilities })
+
 local servers = {
   lua_ls = {
     settings = {
@@ -19,23 +27,20 @@ local servers = {
   },
   ast_grep = {
     filetypes = {
-      "javascript",
-      "typescript",
-      "javascriptreact",
-      "typescriptreact",
-      "html",
-      "css",
+      "javascript", "typescript", "javascriptreact",
+      "typescriptreact", "html", "css",
     },
   },
   ts_ls = {},
 }
-require("mason-lspconfig").setup({
+for name, config in pairs(servers) do
+  vim.lsp.config(name, config)
+end
 
-  handlers = {
-    function(server_name)
-      local server = servers[server_name] or {}
-      server.capabilities = capabilities
-      require("lspconfig")[server_name].setup(server)
-    end,
-  },
-}) -- }}}
+require("mason-lspconfig").setup({
+  -- Installation belongs exclusively to mason-tool-installer.
+  ensure_installed = {},
+  -- Preserve the existing behavior: enable servers installed through Mason.
+  automatic_enable = true,
+})
+-- Language-specific linting modules can still extend these named configs.
