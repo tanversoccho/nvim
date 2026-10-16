@@ -96,6 +96,10 @@
       "rev": "a065833f35a3a7cc3ef137ac88b5381da2ba302e",
       "src": "https://github.com/norcalli/nvim-colorizer.lua"
     },
+    "nvim-lint": {
+      "rev": "f6230a5c06ba59e6059c14637f1dbe29a7978b9b",
+      "src": "https://github.com/mfussenegger/nvim-lint"
+    },
     "nvim-lspconfig": {
       "rev": "8e2084bf5e40c79c1f42210a6ef96a0a4793a763",
       "src": "https://github.com/neovim/nvim-lspconfig"
