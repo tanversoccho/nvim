@@ -1,5 +1,4 @@
 -- Explicit order keeps dependencies predictable. New plugin configs must be listed here.
-require("so.plugins.color")
 require("so.plugins.todo-comments")
 require("so.plugins.mini")
 require("so.plugins.which-key")

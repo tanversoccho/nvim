@@ -1,6 +1,7 @@
 require("settings.options")
 require("settings.keymaps")
 require("settings.autocmds")
+require("settings.color")
 require("so")
 require("so.test")
 require("so.windows")
