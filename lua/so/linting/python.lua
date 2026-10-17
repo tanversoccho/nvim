@@ -17,10 +17,16 @@ vim.api.nvim_create_autocmd("FileType", {
         bufnr = args.buf,
         async = false,
         timeout_ms = 3000,
-        filter = function(client) return client.name == "ruff" end,
+        filter = function(client)
+          return client.name == "ruff"
+        end,
       })
     end, { buffer = args.buf, desc = "Python: format with Ruff" })
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action,
-      { buffer = args.buf, desc = "Python: code actions / organize imports" })
+    vim.keymap.set(
+      "n",
+      "<leader>ca",
+      vim.lsp.buf.code_action,
+      { buffer = args.buf, desc = "Python: code actions / organize imports" }
+    )
   end,
 })

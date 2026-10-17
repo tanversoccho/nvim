@@ -20,17 +20,25 @@ function M.project_root()
   end
   -- Prefer the repository root, even when a nested package has its own manifest.
   local root = vim.fs.root(start, { { ".git", ".hg" } })
-    or vim.fs.root(start, { { "pyproject.toml", "package.json", "Cargo.toml", "go.mod", ".editorconfig" } })
-  if root then return root end
+    or vim.fs.root(
+      start,
+      { { "pyproject.toml", "package.json", "Cargo.toml", "go.mod", ".editorconfig" } }
+    )
+  if root then
+    return root
+  end
   -- For projects without markers, use cwd if the file is inside it.
   local relative = vim.fs.relpath(cwd, start)
-  if relative then return cwd end
+  if relative then
+    return cwd
+  end
   return start
 end
 
 function M.create(directory)
-  local root = directory and directory ~= ""
-    and vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(directory), ":p"))
+  local root = directory
+      and directory ~= ""
+      and vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(directory), ":p"))
     or M.project_root()
   local stat = uv.fs_stat(root)
   if not stat or stat.type ~= "directory" then
@@ -50,7 +58,9 @@ function M.create(directory)
   end
   local info = uv.fs_fstat(input)
   local data, err
-  if info then data, err = uv.fs_read(input, info.size, 0) end
+  if info then
+    data, err = uv.fs_read(input, info.size, 0)
+  end
   uv.fs_close(input)
   if not data then
     vim.notify("Cannot read template contents: " .. tostring(err), vim.log.levels.ERROR)
@@ -66,7 +76,9 @@ function M.create(directory)
   while offset < #data do
     local written
     written, write_error = uv.fs_write(output, data:sub(offset + 1), offset)
-    if not written or written == 0 then break end
+    if not written or written == 0 then
+      break
+    end
     offset = offset + written
   end
   uv.fs_close(output)

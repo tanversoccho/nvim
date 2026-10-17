@@ -69,13 +69,13 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = "⚠", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
-require('vim._core.ui2').enable({
+require("vim._core.ui2").enable({
   enable = true,
   msg = {
     target = "cmd",
     pager = { height = 0.5 },
     dialog = { height = 0.5 },
     cmd = { height = 0.5 },
-    msg = { height = 0.5 , timeout = 4500 },
+    msg = { height = 0.5, timeout = 4500 },
   },
 })

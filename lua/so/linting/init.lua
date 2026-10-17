@@ -9,7 +9,9 @@ end
 
 local function run(manual)
   local buf = vim.api.nvim_get_current_buf()
-  if vim.bo[buf].buftype ~= "" or vim.api.nvim_buf_get_name(buf) == "" then return end
+  if vim.bo[buf].buftype ~= "" or vim.api.nvim_buf_get_name(buf) == "" then
+    return
+  end
   local available, missing = {}, {}
   for _, name in ipairs(lint.linters_by_ft[vim.bo[buf].filetype] or {}) do
     local definition = lint.linters[name]
@@ -36,10 +38,13 @@ local function run(manual)
 end
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
   group = vim.api.nvim_create_augroup("so-linting", { clear = true }),
-  callback = function() run(false) end,
+  callback = function()
+    run(false)
+  end,
 })
-vim.api.nvim_create_user_command("SoLint", function() run(true) end,
-  { desc = "Run command-line linters for this buffer" })
+vim.api.nvim_create_user_command("SoLint", function()
+  run(true)
+end, { desc = "Run command-line linters for this buffer" })
 vim.keymap.set("n", "<leader>cl", "<cmd>SoLint<CR>", { desc = "Run linters" })
 vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 vim.keymap.set("n", "<leader>cq", vim.diagnostic.setqflist, { desc = "Diagnostics to quickfix" })

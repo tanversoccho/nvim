@@ -6,18 +6,34 @@ return {
   -- Optional absolute Prettier JS entrypoint if installed outside Mason/npm.
   prettier_cli = nil,
   formatters = {
-    html = "prettier", css = "prettier", scss = "prettier",
-    javascript = "prettier", javascriptreact = "prettier",
-    typescript = "prettier", typescriptreact = "prettier",
-    json = "prettier", jsonc = "prettier", yaml = "prettier",
-    python = "ruff", lua = "stylua",
+    html = "prettier",
+    css = "prettier",
+    scss = "prettier",
+    javascript = "prettier",
+    javascriptreact = "prettier",
+    typescript = "prettier",
+    typescriptreact = "prettier",
+    json = "prettier",
+    jsonc = "prettier",
+    yaml = "prettier",
+    python = "ruff",
+    lua = "stylua",
   },
   -- Only these formatter executables are needed by this feature.
   install = { "prettier", "ruff", "stylua" },
   -- Optional cleanup: only :SoFormatToolsClean uninstalls these packages.
   -- Language servers and your current Lua/HTML linters are preserved.
   retire = {
-    "black", "darker", "csskit", "eslint_d", "fixjson", "latexindent",
-    "markdown-toc", "markdownlint", "markdownlint-cli2", "pydocstyle", "vale",
+    "black",
+    "darker",
+    "csskit",
+    "eslint_d",
+    "fixjson",
+    "latexindent",
+    "markdown-toc",
+    "markdownlint",
+    "markdownlint-cli2",
+    "pydocstyle",
+    "vale",
   },
 }

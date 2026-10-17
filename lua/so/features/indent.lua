@@ -14,7 +14,9 @@ function M.refresh()
           }
         end
         local width = vim.bo.shiftwidth
-        if width == 0 then width = vim.bo.tabstop end
+        if width == 0 then
+          width = vim.bo.tabstop
+        end
         width = math.max(1, width)
         chars.leadmultispace = "│" .. string.rep(" ", width - 1)
         -- One vertical marker at each tab's start, blank padding thereafter.
@@ -33,17 +35,24 @@ function M.refresh()
 end
 
 function M.setup()
-  if vim.g.so_indent_guides == nil then vim.g.so_indent_guides = true end
+  if vim.g.so_indent_guides == nil then
+    vim.g.so_indent_guides = true
+  end
   local group = vim.api.nvim_create_augroup("so-native-indent", { clear = true })
   vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
-    group = group, callback = M.refresh,
+    group = group,
+    callback = M.refresh,
   })
   vim.api.nvim_create_autocmd("OptionSet", {
-    group = group, pattern = { "shiftwidth", "tabstop" }, callback = M.refresh,
+    group = group,
+    pattern = { "shiftwidth", "tabstop" },
+    callback = M.refresh,
   })
   vim.api.nvim_create_autocmd("WinClosed", {
     group = group,
-    callback = function(args) original[tonumber(args.match)] = nil end,
+    callback = function(args)
+      original[tonumber(args.match)] = nil
+    end,
   })
   vim.api.nvim_create_user_command("SoIndentToggle", function()
     vim.g.so_indent_guides = not vim.g.so_indent_guides

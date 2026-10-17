@@ -8,7 +8,11 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
   group = vim.api.nvim_create_augroup("so-eslint-actions", { clear = true }),
   callback = function(args)
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action,
-      { buffer = args.buf, desc = "ESLint / LSP code actions" })
+    vim.keymap.set(
+      "n",
+      "<leader>ca",
+      vim.lsp.buf.code_action,
+      { buffer = args.buf, desc = "ESLint / LSP code actions" }
+    )
   end,
 })

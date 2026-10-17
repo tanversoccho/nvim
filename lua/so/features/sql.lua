@@ -9,8 +9,12 @@ function M.setup()
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "sql",
     group = vim.api.nvim_create_augroup("so-native-sql", { clear = true }),
-    callback = function(args) configure(args.buf) end,
+    callback = function(args)
+      configure(args.buf)
+    end,
   })
-  if vim.bo.filetype == "sql" then configure(vim.api.nvim_get_current_buf()) end
+  if vim.bo.filetype == "sql" then
+    configure(vim.api.nvim_get_current_buf())
+  end
 end
 return M

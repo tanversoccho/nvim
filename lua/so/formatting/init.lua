@@ -11,7 +11,9 @@ local function file_exists(path)
 end
 local function executable(name)
   local path = vim.fn.exepath(name)
-  if path == "" then error("Missing " .. name .. ". Run :SoFormatToolsInstall, wait, and restart Neovim.", 0) end
+  if path == "" then
+    error("Missing " .. name .. ". Run :SoFormatToolsInstall, wait, and restart Neovim.", 0)
+  end
   if path:lower():match("%.cmd$") or path:lower():match("%.bat$") then
     local package = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "packages", name)
     local candidates = {
@@ -20,59 +22,99 @@ local function executable(name)
     }
     vim.list_extend(candidates, vim.fn.globpath(package, "**/" .. name .. ".exe", false, true))
     for _, candidate in ipairs(candidates) do
-      if file_exists(candidate) then return candidate end
+      if file_exists(candidate) then
+        return candidate
+      end
     end
-    error("Cannot directly execute " .. path .. ". Install " .. name .. " through Mason so its native .exe is available.", 0)
+    error(
+      "Cannot directly execute "
+        .. path
+        .. ". Install "
+        .. name
+        .. " through Mason so its native .exe is available.",
+      0
+    )
   end
   return path
 end
 local function prettier_command(filename)
   local candidates = {}
-  if config.prettier_cli then table.insert(candidates, config.prettier_cli) end
+  if config.prettier_cli then
+    table.insert(candidates, config.prettier_cli)
+  end
   local dir = vim.fs.dirname(filename)
   while dir do
-    table.insert(candidates, vim.fs.joinpath(dir, "node_modules", "prettier", "bin", "prettier.cjs"))
+    table.insert(
+      candidates,
+      vim.fs.joinpath(dir, "node_modules", "prettier", "bin", "prettier.cjs")
+    )
     local parent = vim.fs.dirname(dir)
-    if parent == dir then break end
+    if parent == dir then
+      break
+    end
     dir = parent
   end
   local mason = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "packages", "prettier")
-  table.insert(candidates, vim.fs.joinpath(mason, "node_modules", "prettier", "bin", "prettier.cjs"))
+  table.insert(
+    candidates,
+    vim.fs.joinpath(mason, "node_modules", "prettier", "bin", "prettier.cjs")
+  )
   -- Also recognize a globally installed npm Prettier beside its command shim.
   local shim = vim.fn.exepath("prettier")
   if shim ~= "" then
     local bin = vim.fs.dirname(shim)
-    table.insert(candidates, vim.fs.joinpath(bin, "node_modules", "prettier", "bin", "prettier.cjs"))
-    table.insert(candidates, vim.fs.joinpath(bin, "..", "lib", "node_modules", "prettier", "bin", "prettier.cjs"))
+    table.insert(
+      candidates,
+      vim.fs.joinpath(bin, "node_modules", "prettier", "bin", "prettier.cjs")
+    )
+    table.insert(
+      candidates,
+      vim.fs.joinpath(bin, "..", "lib", "node_modules", "prettier", "bin", "prettier.cjs")
+    )
   end
   for _, path in ipairs(candidates) do
-    if file_exists(path) then return { executable("node"), path } end
+    if file_exists(path) then
+      return { executable("node"), path }
+    end
   end
   -- Unix executable scripts can run directly. Windows .cmd shims cannot be
   -- spawned directly by vim.system; use Node with the JS entrypoint above.
   if shim ~= "" and not shim:lower():match("%.cmd$") and not shim:lower():match("%.bat$") then
     return { shim }
   end
-  error("Cannot find Prettier's JavaScript entrypoint. Install it through Mason or set prettier_cli in so/formatting/config.lua.", 0)
+  error(
+    "Cannot find Prettier's JavaScript entrypoint. Install it through Mason or set prettier_cli in so/formatting/config.lua.",
+    0
+  )
 end
 
 function M.command(buf)
   local kind = config.formatters[vim.bo[buf].filetype]
-  if not kind then error("No formatter configured for " .. vim.bo[buf].filetype, 0) end
+  if not kind then
+    error("No formatter configured for " .. vim.bo[buf].filetype, 0)
+  end
   local filename = vim.api.nvim_buf_get_name(buf)
-  if filename == "" then error("Save/name the file first so its parser and rules can be resolved.", 0) end
+  if filename == "" then
+    error("Save/name the file first so its parser and rules can be resolved.", 0)
+  end
   local cmd
   if kind == "prettier" then
     cmd = prettier_command(filename)
     vim.list_extend(cmd, { "--stdin-filepath", filename })
-    if not config.use_project_config then vim.list_extend(cmd, { "--config", rules("prettier.json"), "--no-editorconfig" }) end
+    if not config.use_project_config then
+      vim.list_extend(cmd, { "--config", rules("prettier.json"), "--no-editorconfig" })
+    end
   elseif kind == "ruff" then
     cmd = { executable("ruff"), "format", "--stdin-filename", filename }
-    if not config.use_project_config then vim.list_extend(cmd, { "--config", rules("ruff.toml") }) end
+    if not config.use_project_config then
+      vim.list_extend(cmd, { "--config", rules("ruff.toml") })
+    end
     table.insert(cmd, "-")
   elseif kind == "stylua" then
     cmd = { executable("stylua"), "--stdin-filepath", filename }
-    if not config.use_project_config then vim.list_extend(cmd, { "--config-path", rules("stylua.toml") }) end
+    if not config.use_project_config then
+      vim.list_extend(cmd, { "--config-path", rules("stylua.toml") })
+    end
     table.insert(cmd, "-")
   else
     error("Unknown formatter: " .. tostring(kind), 0)
@@ -83,57 +125,91 @@ end
 function M.format(buf)
   buf = buf or vim.api.nvim_get_current_buf()
   local ok, err = pcall(function()
-    if vim.bo[buf].buftype ~= "" or not vim.bo[buf].modifiable then error("Buffer is not an editable source file.", 0) end
+    if vim.bo[buf].buftype ~= "" or not vim.bo[buf].modifiable then
+      error("Buffer is not an editable source file.", 0)
+    end
     local cmd, filename = M.command(buf)
     local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
     local input = table.concat(lines, "\n") .. (vim.bo[buf].endofline and "\n" or "")
-    local result = vim.system(cmd, {
-      stdin = input, text = true, cwd = vim.fs.dirname(filename),
-    }):wait(config.timeout_ms)
+    local result = vim
+      .system(cmd, {
+        stdin = input,
+        text = true,
+        cwd = vim.fs.dirname(filename),
+      })
+      :wait(config.timeout_ms)
     if result.code ~= 0 then
-      error((result.stderr and result.stderr ~= "" and result.stderr) or ("Formatter failed with exit code " .. tostring(result.code)), 0)
+      error(
+        (result.stderr and result.stderr ~= "" and result.stderr)
+          or ("Formatter failed with exit code " .. tostring(result.code)),
+        0
+      )
     end
     local output = result.stdout or ""
-    if output == input then return end
-    if output == "" and input:find("%S") then error("Formatter returned empty output; buffer preserved.", 0) end
+    if output == input then
+      return
+    end
+    if output == "" and input:find("%S") then
+      error("Formatter returned empty output; buffer preserved.", 0)
+    end
     local formatted = vim.split(output, "\n", { plain = true })
-    if output:sub(-1) == "\n" then table.remove(formatted) end
-    if #formatted == 0 then formatted = { "" } end
+    if output:sub(-1) == "\n" then
+      table.remove(formatted)
+    end
+    if #formatted == 0 then
+      formatted = { "" }
+    end
     local view = vim.fn.winsaveview()
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, formatted)
     vim.bo[buf].endofline = output:sub(-1) == "\n"
     vim.fn.winrestview(view)
   end)
-  if not ok then vim.notify("Format: " .. tostring(err), vim.log.levels.ERROR) end
+  if not ok then
+    vim.notify("Format: " .. tostring(err), vim.log.levels.ERROR)
+  end
   return ok
 end
 
 function M.formatexpr()
   -- Never run the whole-file formatter during automatic text wrapping in Insert.
-  if vim.v.char ~= "" then return 0 end
+  if vim.v.char ~= "" then
+    return 0
+  end
   M.format(vim.api.nvim_get_current_buf())
   -- Return success even on tool failure to suppress Vim's text-wrapping fallback.
   return 0
 end
 local function configure(buf)
-  if vim.bo[buf].buftype ~= "" or not config.formatters[vim.bo[buf].filetype] then return end
+  if vim.bo[buf].buftype ~= "" or not config.formatters[vim.bo[buf].filetype] then
+    return
+  end
   vim.bo[buf].formatexpr = "v:lua.require'so.formatting'.formatexpr()"
   vim.bo[buf].formatprg = ""
-  vim.keymap.set("n", "<leader>cf", function() M.format(buf) end,
-    { buffer = buf, desc = "Format file using your formatter rules" })
+  vim.keymap.set("n", "<leader>cf", function()
+    M.format(buf)
+  end, { buffer = buf, desc = "Format file using your formatter rules" })
 end
 
 function M.setup()
   vim.api.nvim_create_autocmd({ "FileType", "LspAttach", "BufEnter" }, {
     group = vim.api.nvim_create_augroup("so-unified-formatting", { clear = true }),
-    callback = function(args) configure(args.buf) end,
+    callback = function(args)
+      configure(args.buf)
+    end,
   })
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do configure(buf) end
-  vim.api.nvim_create_user_command("SoFormat", function() M.format() end,
-    { desc = "Format whole source file using your Neovim rules" })
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    configure(buf)
+  end
+  vim.api.nvim_create_user_command("SoFormat", function()
+    M.format()
+  end, { desc = "Format whole source file using your Neovim rules" })
   vim.api.nvim_create_user_command("SoFormatInfo", function()
     local ok, cmd = pcall(M.command, vim.api.nvim_get_current_buf())
-    if ok then vim.notify(vim.inspect(cmd)) else vim.notify(tostring(cmd), vim.log.levels.WARN) end
+    if ok then
+      vim.notify(vim.inspect(cmd))
+    else
+      vim.notify(tostring(cmd), vim.log.levels.WARN)
+    end
   end, { desc = "Show the selected formatter and exact arguments" })
   vim.api.nvim_create_user_command("SoFormatToolsInstall", function()
     vim.cmd("MasonInstall " .. table.concat(config.install, " "))
@@ -142,9 +218,14 @@ function M.setup()
     local registry = require("mason-registry")
     local remove = {}
     for _, name in ipairs(config.retire) do
-      if registry.has_package(name) and registry.get_package(name):is_installed() then table.insert(remove, name) end
+      if registry.has_package(name) and registry.get_package(name):is_installed() then
+        table.insert(remove, name)
+      end
     end
-    if #remove == 0 then vim.notify("No retired formatter/lint packages remain."); return end
+    if #remove == 0 then
+      vim.notify("No retired formatter/lint packages remain.")
+      return
+    end
     vim.notify("Removing Mason packages: " .. table.concat(remove, ", "))
     vim.cmd("MasonUninstall " .. table.concat(remove, " "))
   end, { desc = "Remove only packages listed in formatting/config.lua retire" })
