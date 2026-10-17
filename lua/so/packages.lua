@@ -5,7 +5,6 @@ vim.pack.add({
   "https://github.com/OXY2DEV/markview.nvim",
   "https://github.com/lervag/vimtex",
   "https://github.com/kdheepak/lazygit.nvim",
-  "https://github.com/lukas-reineke/indent-blankline.nvim",
   "https://github.com/nvim-neo-tree/neo-tree.nvim",
   "https://github.com/echasnovski/mini.nvim",
 
