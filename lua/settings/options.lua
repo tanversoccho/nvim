@@ -53,7 +53,7 @@ vim.opt.listchars = {
 }
 vim.opt.inccommand = "split"
 vim.opt.foldmethod = "marker"
-vim.opt.completeopt = "menu,menuone,noselect"
+vim.opt.completeopt = "menu,menuone,noselect,popup"
 
 -- Enable diagnostic signs in gutter
 vim.diagnostic.config({

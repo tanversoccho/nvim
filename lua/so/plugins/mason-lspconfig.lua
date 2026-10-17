@@ -1,11 +1,8 @@
 -- Mason must be configured before the LSP bridge, regardless of loader order.
 require("so.plugins.mason")
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
--- Use Blink's capabilities when available; no dependency on cmp-nvim-lsp.
-local ok, blink = pcall(require, "blink.cmp")
-if ok then capabilities = blink.get_lsp_capabilities(capabilities) end
-vim.lsp.config("*", { capabilities = capabilities })
+-- Neovim supplies completion/snippet capabilities; no completion plugin required.
+vim.lsp.config("*", { capabilities = vim.lsp.protocol.make_client_capabilities() })
 
 local servers = {
   lua_ls = {

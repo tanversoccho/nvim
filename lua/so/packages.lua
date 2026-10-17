@@ -10,7 +10,6 @@ vim.pack.add({
   "https://github.com/echasnovski/mini.nvim",
 
   "https://github.com/tpope/vim-dadbod",
-  "https://github.com/kristijanhusak/vim-dadbod-completion",
   "https://github.com/kristijanhusak/vim-dadbod-ui",
 
   "https://github.com/lewis6991/gitsigns.nvim",
@@ -26,16 +25,6 @@ vim.pack.add({
   "https://github.com/mason-org/mason-lspconfig.nvim",
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 
-  "https://github.com/saghen/blink.cmp",
-  "https://github.com/hrsh7th/nvim-cmp",
-  "https://github.com/hrsh7th/cmp-nvim-lsp",
-  "https://github.com/hrsh7th/cmp-buffer",
-  "https://github.com/hrsh7th/cmp-path",
-  "https://github.com/hrsh7th/cmp-cmdline",
-  "https://github.com/saadparwaiz1/cmp_luasnip",
-  "https://github.com/L3MON4D3/LuaSnip",
-  "https://github.com/folke/lazydev.nvim",
-  "https://github.com/rafamadriz/friendly-snippets",
   "https://github.com/chentoast/marks.nvim",
   "https://github.com/folke/which-key.nvim",
 })
