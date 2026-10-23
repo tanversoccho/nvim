@@ -36,10 +36,6 @@
       "rev": "295af26358628c8ba8f007ff6a7e0aec2f642a31",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
-    "neo-tree.nvim": {
-      "rev": "d5b8a12b74683ddaefa519ce66a097610672859f",
-      "src": "https://github.com/nvim-neo-tree/neo-tree.nvim"
-    },
     "nui.nvim": {
       "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
       "src": "https://github.com/MunifTanjim/nui.nvim"
@@ -67,10 +63,6 @@
     "nvim-web-devicons": {
       "rev": "ec309a0eaff6ea967e58c275996155ab5c16938d",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
-    },
-    "oil.nvim": {
-      "rev": "d3733d933833a0e59b813ecec99341527adf0c28",
-      "src": "https://github.com/stevearc/oil.nvim"
     },
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",

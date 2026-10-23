@@ -1,11 +1,24 @@
-vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 3
-vim.g.netrw_winsize = 25
-vim.g.netrw_browse_split = 4
-vim.g.netrw_keepdir = 1
-vim.keymap.set("n", "<leader>ee", "<cmd>Lexplore<CR>", { desc = "Toggle file explorer" })
-vim.keymap.set("n", "-", function()
-  local path = vim.api.nvim_buf_get_name(0)
-  local dir = path ~= "" and vim.fn.fnamemodify(path, ":p:h") or vim.fn.getcwd()
-  vim.cmd("Explore " .. vim.fn.fnameescape(dir))
-end, { desc = "Explore current file directory" })
+vim.opt.hidden = true -- Keep unsaved files in background buffers.
+vim.g.netrw_browse_split = 0
+vim.g.netrw_banner = 1
+vim.g.netrw_preview = 1 -- Vertical preview.
+vim.g.netrw_alto = 0    -- Preview on the left.
+
+local function explore_here()
+  local filename = vim.api.nvim_buf_get_name(0)
+  local directory
+
+  if vim.bo.filetype == "netrw" then
+    directory = vim.b.netrw_curdir or vim.fn.getcwd()
+  elseif filename ~= "" then
+    directory = vim.fn.fnamemodify(filename, ":p:h")
+  else
+    directory = vim.fn.getcwd()
+  end
+
+  vim.cmd("edit " .. vim.fn.fnameescape(directory))
+end
+
+vim.keymap.set("n", "-", explore_here, {
+  desc = "Explore current directory",
+})
