@@ -18,9 +18,13 @@ return {
     yaml = "prettier",
     python = "ruff",
     lua = "stylua",
+    c = "clang-format",
+    cpp = "clang-format",
+    typst = "typstyle",
   },
   -- Only these formatter executables are needed by this feature.
-  install = { "prettier", "ruff", "stylua" },
+  install = { "prettier", "ruff", "stylua", "clang-format", "typstyle" },
+  typstyle = { indent_width = 2, line_width = 100 },
   -- Optional cleanup: only :SoFormatToolsClean uninstalls these packages.
   -- Language servers and your current Lua/HTML linters are preserved.
   retire = {

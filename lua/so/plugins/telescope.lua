@@ -75,11 +75,19 @@ bind("<leader>fR", builtin.lsp_references, "Find LSP references")
 bind("<leader>fc", builtin.commands, "Find commands")
 bind("<leader>ft", builtin.colorscheme, "Find themes")
 bind("<leader>/", builtin.current_buffer_fuzzy_find, "Search current buffer")
-bind("<leader>f/", with_rg(function()
-  builtin.live_grep({ grep_open_files = true, prompt_title = "Grep Open Files" })
-end), "Grep open files")
+bind(
+  "<leader>f/",
+  with_rg(function()
+    builtin.live_grep({ grep_open_files = true, prompt_title = "Grep Open Files" })
+  end),
+  "Grep open files"
+)
 bind("<leader>fH", function()
-  builtin.find_files({ hidden = true, no_ignore = true, prompt_title = "All Files (Hidden + Ignored)" })
+  builtin.find_files({
+    hidden = true,
+    no_ignore = true,
+    prompt_title = "All Files (Hidden + Ignored)",
+  })
 end, "Find hidden and ignored files")
 bind("<leader>fn", function()
   builtin.find_files({ cwd = vim.fn.stdpath("config"), prompt_title = "Neovim Config" })

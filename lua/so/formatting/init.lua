@@ -116,6 +116,17 @@ function M.command(buf)
       vim.list_extend(cmd, { "--config-path", rules("stylua.toml") })
     end
     table.insert(cmd, "-")
+  elseif kind == "clang-format" then
+    cmd = { executable("clang-format"), "--assume-filename=" .. filename }
+    if not config.use_project_config then
+      table.insert(cmd, "--style=file:" .. rules("clang-format.yaml"))
+    end
+  elseif kind == "typstyle" then
+    cmd = { executable("typstyle") }
+    if not config.use_project_config then
+      vim.list_extend(cmd, { "--indent-width", tostring(config.typstyle.indent_width),
+        "--line-width", tostring(config.typstyle.line_width) })
+    end
   else
     error("Unknown formatter: " .. tostring(kind), 0)
   end
@@ -213,7 +224,7 @@ function M.setup()
   end, { desc = "Show the selected formatter and exact arguments" })
   vim.api.nvim_create_user_command("SoFormatToolsInstall", function()
     vim.cmd("MasonInstall " .. table.concat(config.install, " "))
-  end, { desc = "Install Prettier, Ruff and StyLua through Mason" })
+  end, { desc = "Install configured formatters through Mason" })
   vim.api.nvim_create_user_command("SoFormatToolsClean", function()
     local registry = require("mason-registry")
     local remove = {}

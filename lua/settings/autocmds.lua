@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
   callback = function(args)
     -- Ensure inlay hints are enabled for this buffer
-    vim.lsp.inlay_hint.enable(false, { bufnr = args.buf })
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = args.buf })
     -- Keymaps
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = args.buf })
     vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = args.buf })

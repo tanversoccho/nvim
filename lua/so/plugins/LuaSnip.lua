@@ -1,3 +1,0 @@
--- L3MON4D3/LuaSnip
--- Default configuration retained. Add this plugin's settings here.
--- Dependency-only plugins do not need a setup() call.

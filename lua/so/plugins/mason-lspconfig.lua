@@ -22,6 +22,11 @@ local servers = {
       },
     },
   },
+  clangd = {},
+  pyright = {},
+  tinymist = { settings = { formatterMode = "typstyle" } },
+  cssls = {},
+  html = {},
   ast_grep = {
     filetypes = {
       "javascript", "typescript", "javascriptreact",
@@ -38,6 +43,6 @@ require("mason-lspconfig").setup({
   -- Installation belongs exclusively to mason-tool-installer.
   ensure_installed = {},
   -- Preserve the existing behavior: enable servers installed through Mason.
-  automatic_enable = true,
+  automatic_enable = { "lua_ls", "clangd", "pyright", "tinymist", "ts_ls", "cssls", "html", "ruff", "eslint", "powershell_es" },
 })
 -- Language-specific linting modules can still extend these named configs.

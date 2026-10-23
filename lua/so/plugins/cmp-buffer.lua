@@ -1,3 +1,0 @@
--- hrsh7th/cmp-buffer
--- Default configuration retained. Add this plugin's settings here.
--- Dependency-only plugins do not need a setup() call.

@@ -1,11 +1,11 @@
 vim.pack.add({
+  "https://github.com/mfussenegger/nvim-dap",
   "https://github.com/folke/todo-comments.nvim",
   "https://github.com/MunifTanjim/nui.nvim",
   "https://github.com/selimacerbas/markdown-preview.nvim",
   "https://github.com/OXY2DEV/markview.nvim",
   "https://github.com/lervag/vimtex",
   "https://github.com/kdheepak/lazygit.nvim",
-  "https://github.com/nvim-neo-tree/neo-tree.nvim",
   "https://github.com/echasnovski/mini.nvim",
 
   "https://github.com/tpope/vim-dadbod",
@@ -13,7 +13,6 @@ vim.pack.add({
 
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/norcalli/nvim-colorizer.lua",
-  "https://github.com/stevearc/oil.nvim",
   "https://github.com/nvim-tree/nvim-web-devicons",
   "https://github.com/nvim-telescope/telescope.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
