@@ -2,7 +2,6 @@ vim.pack.add({
   "https://github.com/mfussenegger/nvim-dap",
   "https://github.com/folke/todo-comments.nvim",
   "https://github.com/MunifTanjim/nui.nvim",
-  "https://github.com/selimacerbas/markdown-preview.nvim",
   "https://github.com/lervag/vimtex",
   "https://github.com/kdheepak/lazygit.nvim",
   "https://github.com/echasnovski/mini.nvim",
