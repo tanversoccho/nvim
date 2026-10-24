@@ -4,13 +4,13 @@ Requires Neovim 0.12+, Git, Node.js/npm, Python, and platform build prerequisite
 reported by `:checkhealth mason`. Use `:MasonToolsInstall`, wait for installation,
 and restart. Mason tool names live ONLY in `lua/so/plugins/mason-tool-installer.lua`.
 
-| Language | LSP | Diagnostics / linter | Formatter | Debug adapter |
-| --- | --- | --- | --- | --- |
-| Lua | lua_ls | Lua LS + luacheck | StyLua | local-lua-debugger-vscode (standalone Lua) |
-| C/C++ | clangd | clangd compiler diagnostics/clang-tidy checks | clang-format | CodeLLDB |
-| JavaScript/TS | ts_ls | ESLint | Prettier | js-debug-adapter (Node) |
-| Typst | tinymist | Tinymist compilation diagnostics | Typstyle | No Typst DAP configured |
-| Python | pyright | Pyright types + Ruff lint | Ruff | debugpy |
+| Language      | LSP      | Diagnostics / linter                          | Formatter    | Debug adapter                              |
+| ------------- | -------- | --------------------------------------------- | ------------ | ------------------------------------------ |
+| Lua           | lua_ls   | Lua LS + luacheck                             | StyLua       | local-lua-debugger-vscode (standalone Lua) |
+| C/C++         | clangd   | clangd compiler diagnostics/clang-tidy checks | clang-format | CodeLLDB                                   |
+| JavaScript/TS | ts_ls    | ESLint                                        | Prettier     | js-debug-adapter (Node)                    |
+| Typst         | tinymist | Tinymist compilation diagnostics              | Typstyle     | No Typst DAP configured                    |
+| Python        | pyright  | Pyright types + Ruff lint                     | Ruff         | debugpy                                    |
 
 Clangd's optional clang-tidy analysis can be enabled in your project's `.clangd`:
 
