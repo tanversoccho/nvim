@@ -20,7 +20,7 @@ local config = {
   },
   icons = vim.g.have_nerd_font == true, -- Set false for a regular terminal font.
   global = true, -- One full-width bar, like the screenshot.
-  clock = true,
+  clock = false,
   clock_format = "%H:%M", -- Use "%I:%M %p" for a 12-hour clock.
   branch = true, -- Requires only Git on PATH.
   diagnostics = true,
@@ -205,8 +205,16 @@ function M.render()
   local width = config.global and vim.o.columns or api.nvim_win_get_width(win)
   local name, color = mode()
   local out = { segment("Accent", "▌"), segment(color, " " .. name .. " ") }
-  if width >= 55 then
-    out[#out + 1] = " %l:%v "
+  local dir = directory(buf)
+  local branch = dir and cache[dir] and cache[dir].branch or ""
+  if width >= 100 and branch ~= "" then
+    out[#out + 1] = segment(
+      "Branch",
+      " "
+        .. (config.icons and " " or "git:")
+        .. escape(short(branch, config.branch_max_chars))
+        .. " "
+    )
   end
   local path = api.nvim_buf_get_name(buf)
   local filename = path == "" and "[No Name]" or vim.fn.fnamemodify(path, ":t")
@@ -246,16 +254,8 @@ function M.render()
   if width >= 55 then
     out[#out + 1] = " %p%% "
   end
-  local dir = directory(buf)
-  local branch = dir and cache[dir] and cache[dir].branch or ""
-  if width >= 100 and branch ~= "" then
-    out[#out + 1] = segment(
-      "Branch",
-      " "
-        .. (config.icons and " " or "git:")
-        .. escape(short(branch, config.branch_max_chars))
-        .. " "
-    )
+  if width >= 55 then
+    out[#out + 1] = " %l:%v "
   end
   if config.clock and width >= 90 then
     out[#out + 1] = segment("Clock", " " .. os.date(config.clock_format) .. " ")
