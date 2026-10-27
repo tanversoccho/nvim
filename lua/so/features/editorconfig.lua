@@ -1,14 +1,11 @@
 local M = {}
 local uv = vim.uv
-
 local function template_path()
   return vim.fs.joinpath(vim.fn.stdpath("config"), "templates", "editorconfig.template")
 end
-
 local function edit(path)
   vim.cmd("edit " .. vim.fn.fnameescape(path))
 end
-
 function M.project_root()
   local cwd = vim.fs.normalize(vim.fn.getcwd())
   local name = vim.api.nvim_buf_get_name(0)
@@ -18,7 +15,6 @@ function M.project_root()
     local stat = uv.fs_stat(name)
     start = stat and stat.type == "directory" and name or vim.fs.dirname(name)
   end
-  -- Prefer the repository root, even when a nested package has its own manifest.
   local root = vim.fs.root(start, { { ".git", ".hg" } })
     or vim.fs.root(
       start,
@@ -27,14 +23,12 @@ function M.project_root()
   if root then
     return root
   end
-  -- For projects without markers, use cwd if the file is inside it.
   local relative = vim.fs.relpath(cwd, start)
   if relative then
     return cwd
   end
   return start
 end
-
 function M.create(directory)
   local root = directory
       and directory ~= ""
@@ -66,7 +60,6 @@ function M.create(directory)
     vim.notify("Cannot read template contents: " .. tostring(err), vim.log.levels.ERROR)
     return
   end
-  -- Exclusive creation protects existing files even if another process races us.
   local output, write_error = uv.fs_open(target, "wx", 420)
   if not output then
     vim.notify("Cannot create .editorconfig: " .. tostring(write_error), vim.log.levels.ERROR)
@@ -89,7 +82,6 @@ function M.create(directory)
   end
   vim.notify("Created " .. target .. ". Reopen source files to apply its indentation settings.")
 end
-
 function M.setup()
   vim.api.nvim_create_user_command("MakeEditorConfig", function(args)
     M.create(args.args)

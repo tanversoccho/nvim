@@ -3,7 +3,7 @@ vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 20
 vim.g.netrw_preview = 1 -- Vertical preview.
-vim.g.netrw_alto = 0    -- Preview on the left.
+vim.g.netrw_alto = 0 -- Preview on the left.
 vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
 
 local function explore_here()

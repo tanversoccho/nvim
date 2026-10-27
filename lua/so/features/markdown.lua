@@ -27,11 +27,15 @@ local function highlights()
   api.nvim_set_hl(0, "SoMarkdownUnchecked", { default = true, link = "DiagnosticWarn" })
 end
 local function eligible(buf)
-  return api.nvim_buf_is_valid(buf) and api.nvim_buf_is_loaded(buf)
-    and vim.bo[buf].filetype == "markdown" and vim.bo[buf].buftype == ""
+  return api.nvim_buf_is_valid(buf)
+    and api.nvim_buf_is_loaded(buf)
+    and vim.bo[buf].filetype == "markdown"
+    and vim.bo[buf].buftype == ""
 end
 local function enabled(buf)
-  if overrides[buf] ~= nil then return overrides[buf] end
+  if overrides[buf] ~= nil then
+    return overrides[buf]
+  end
   return options.enabled
 end
 local function escaped(text, col)
@@ -45,7 +49,9 @@ end
 local function mark(buf, row, first, last, group)
   if last > first then
     api.nvim_buf_set_extmark(buf, ns, row, first, {
-      end_col = last, hl_group = group, priority = 120,
+      end_col = last,
+      hl_group = group,
+      priority = 120,
     })
   end
 end
@@ -54,7 +60,9 @@ local function inline(buf, row, text)
   local spans, start = {}, 1
   while start <= #text do
     local a, b = text:find("`+", start)
-    if not a then break end
+    if not a then
+      break
+    end
     local delimiter = text:sub(a, b)
     local c, d = text:find(delimiter, b + 1, true)
     while c and (text:sub(c - 1, c - 1) == "`" or text:sub(d + 1, d + 1) == "`") do
@@ -62,7 +70,9 @@ local function inline(buf, row, text)
     end
     if c and not escaped(text, a) then
       spans[#spans + 1] = { a, d }
-      if options.inline_code then mark(buf, row, a - 1, d, "SoMarkdownInlineCode") end
+      if options.inline_code then
+        mark(buf, row, a - 1, d, "SoMarkdownInlineCode")
+      end
       start = d + 1
     else
       start = b + 1
@@ -70,7 +80,9 @@ local function inline(buf, row, text)
   end
   local function inside_code(a, b)
     for _, span in ipairs(spans) do
-      if a <= span[2] and b >= span[1] then return true end
+      if a <= span[2] and b >= span[1] then
+        return true
+      end
     end
     return false
   end
@@ -80,7 +92,9 @@ local function inline(buf, row, text)
       local offset = 1
       while true do
         local a, b = text:find(pattern, offset)
-        if not a then break end
+        if not a then
+          break
+        end
         if not escaped(text, a) and not inside_code(a, b) then
           mark(buf, row, a - 1, b, "SoMarkdownLink")
         end
@@ -90,12 +104,21 @@ local function inline(buf, row, text)
   end
 end
 function M.render(buf)
-  if not api.nvim_buf_is_valid(buf) or not api.nvim_buf_is_loaded(buf) then return end
+  if not api.nvim_buf_is_valid(buf) or not api.nvim_buf_is_loaded(buf) then
+    return
+  end
   api.nvim_buf_clear_namespace(buf, ns, 0, -1)
-  if not eligible(buf) then tracked[buf] = nil; return end
+  if not eligible(buf) then
+    tracked[buf] = nil
+    return
+  end
   tracked[buf] = true
-  if not enabled(buf) then return end
-  if api.nvim_buf_line_count(buf) > options.max_lines then return end
+  if not enabled(buf) then
+    return
+  end
+  if api.nvim_buf_line_count(buf) > options.max_lines then
+    return
+  end
   local cursor = -1
   if options.hide_cursor_line and api.nvim_get_current_buf() == buf then
     cursor = api.nvim_win_get_cursor(0)[1] - 1
@@ -104,8 +127,7 @@ function M.render(buf)
   for index, text in ipairs(api.nvim_buf_get_lines(buf, 0, -1, false)) do
     local row = index - 1
     local indent, run, info = text:match("^( *)([`~]+)(.*)$")
-    local valid = run and #indent <= 3 and #run >= 3
-      and (run:match("^`+$") or run:match("^~+$"))
+    local valid = run and #indent <= 3 and #run >= 3 and (run:match("^`+$") or run:match("^~+$"))
     local opening, closing = false, false
     if fence then
       closing = valid and run:sub(1, 1) == fence and #run >= fence_size and info:match("^%s*$")
@@ -117,18 +139,22 @@ function M.render(buf)
       if row ~= cursor then
         if options.code_blocks then
           api.nvim_buf_set_extmark(buf, ns, row, 0, {
-            line_hl_group = "SoMarkdownCode", priority = 80,
+            line_hl_group = "SoMarkdownCode",
+            priority = 80,
           })
         end
         if opening and options.code_labels then
           local language = info:match("^%s*([^%s]+)") or "code"
           api.nvim_buf_set_extmark(buf, ns, row, 0, {
             virt_text = { { "  " .. language .. "  ", "SoMarkdownCodeLabel" } },
-            virt_text_pos = "right_align", priority = 110,
+            virt_text_pos = "right_align",
+            priority = 110,
           })
         end
       end
-      if closing then fence, fence_size = nil, nil end
+      if closing then
+        fence, fence_size = nil, nil
+      end
     elseif row ~= cursor then
       if options.headings then
         local hashes = text:match("^ ? ? ?(#+)%s+")
@@ -138,26 +164,37 @@ function M.render(buf)
       end
       if options.checkboxes then
         local first, last, checked = text:find("^%s*[-+*]%s+%[([ xX])%]")
-        if not first then first, last, checked = text:find("^%s*%d+[.)]%s+%[([ xX])%]") end
+        if not first then
+          first, last, checked = text:find("^%s*%d+[.)]%s+%[([ xX])%]")
+        end
         if first and (text:sub(last + 1, last + 1):match("%s") or last == #text) then
           local done = checked:lower() == "x"
           api.nvim_buf_set_extmark(buf, ns, row, last - 3, {
-            virt_text = { { done and "☑  " or "☐  ", done and "SoMarkdownChecked" or "SoMarkdownUnchecked" } },
-            virt_text_pos = "overlay", priority = 130,
+            virt_text = {
+              { done and "☑  " or "☐  ", done and "SoMarkdownChecked" or "SoMarkdownUnchecked" },
+            },
+            virt_text_pos = "overlay",
+            priority = 130,
           })
         end
       end
       -- Four-space/tab indented code is left to normal syntax highlighting.
-      if not text:match("^    ") and not text:match("^\t") then inline(buf, row, text) end
+      if not text:match("^    ") and not text:match("^\t") then
+        inline(buf, row, text)
+      end
     end
   end
 end
 local function queue(buf)
-  if not api.nvim_buf_is_valid(buf) then return end
+  if not api.nvim_buf_is_valid(buf) then
+    return
+  end
   local token = (pending[buf] or 0) + 1
   pending[buf] = token
   vim.defer_fn(function()
-    if pending[buf] ~= token then return end
+    if pending[buf] ~= token then
+      return
+    end
     pending[buf] = nil
     M.render(buf)
   end, options.debounce_ms)
@@ -166,19 +203,42 @@ function M.setup(config)
   options = vim.tbl_deep_extend("force", options, config or {})
   highlights()
   local group = api.nvim_create_augroup("so-markdown-preview", { clear = true })
-  api.nvim_create_autocmd({ "FileType", "BufWinEnter", "TextChanged", "TextChangedI", "CursorMoved", "CursorMovedI", "InsertLeave" }, {
+  api.nvim_create_autocmd(
+    {
+      "FileType",
+      "BufWinEnter",
+      "TextChanged",
+      "TextChangedI",
+      "CursorMoved",
+      "CursorMovedI",
+      "InsertLeave",
+    },
+    {
+      group = group,
+      callback = function(args)
+        if eligible(args.buf) or tracked[args.buf] then
+          queue(args.buf)
+        end
+      end,
+    }
+  )
+  api.nvim_create_autocmd("ColorScheme", {
     group = group,
-    callback = function(args)
-      if eligible(args.buf) or tracked[args.buf] then queue(args.buf) end
+    callback = function()
+      highlights()
+      for _, buf in ipairs(api.nvim_list_bufs()) do
+        if eligible(buf) then
+          queue(buf)
+        end
+      end
     end,
   })
-  api.nvim_create_autocmd("ColorScheme", { group = group, callback = function()
-    highlights()
-    for _, buf in ipairs(api.nvim_list_bufs()) do if eligible(buf) then queue(buf) end end
-  end })
-  api.nvim_create_autocmd("BufWipeout", { group = group, callback = function(args)
-    overrides[args.buf], pending[args.buf], tracked[args.buf] = nil, nil, nil
-  end })
+  api.nvim_create_autocmd("BufWipeout", {
+    group = group,
+    callback = function(args)
+      overrides[args.buf], pending[args.buf], tracked[args.buf] = nil, nil, nil
+    end,
+  })
   api.nvim_create_user_command("SoPreviewToggle", function()
     local buf = api.nvim_get_current_buf()
     if not eligible(buf) then
@@ -189,6 +249,10 @@ function M.setup(config)
     M.render(buf)
     vim.notify("Markdown decorations: " .. (enabled(buf) and "on" or "off"))
   end, { desc = "Toggle native Markdown decorations in this buffer", force = true })
-  for _, buf in ipairs(api.nvim_list_bufs()) do if eligible(buf) then queue(buf) end end
+  for _, buf in ipairs(api.nvim_list_bufs()) do
+    if eligible(buf) then
+      queue(buf)
+    end
+  end
 end
 return M

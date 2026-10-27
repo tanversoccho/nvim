@@ -1,11 +1,9 @@
 local M = {}
 
 function M.setup()
-  -- Native word completion plus the buffer's omnifunc (LSP where available).
   vim.opt.autocomplete = true
   vim.opt.complete = { ".", "w", "b", "u", "o" }
   vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
-
   local function attach(client, buf)
     if client and client:supports_method("textDocument/completion", buf) then
       vim.bo[buf].omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -25,7 +23,6 @@ function M.setup()
       attach(client, buf)
     end
   end
-
   local function jump(direction)
     if vim.snippet.active({ direction = direction }) then
       -- Snippet jumps modify text/selection; defer outside expression-map textlock.
@@ -58,9 +55,6 @@ function M.setup()
   vim.keymap.set("i", "<C-Space>", function()
     vim.lsp.completion.get()
   end, { desc = "Request native LSP completion" })
-
-  -- Removing declarations prevents activation; this command removes the old
-  -- managed checkouts and lockfile entries after a fresh restart.
   local retired = {
     ["blink.cmp"] = true,
     ["nvim-cmp"] = true,
