@@ -84,7 +84,7 @@ local function prettier_command(filename)
   end
   error(
     "Cannot find Prettier's JavaScript entrypoint. "
-    .."Install it through Mason or set prettier_cli in so/formatting/config.lua.",
+      .. "Install it through Mason or set prettier_cli in so/formatting/config.lua.",
     0
   )
 end
@@ -182,6 +182,30 @@ function M.command(buf)
       executable("beautysh"),
       "--indent-size",
       tostring(config.beautysh.indent_size),
+      "-",
+    }
+  elseif kind == "xmlformatter" then
+    -- Mason's package name differs from its executable name.
+    local mason_exe = vim.fs.joinpath(
+      vim.fn.stdpath("data"),
+      "mason",
+      "packages",
+      "xmlformatter",
+      "venv",
+      "Scripts",
+      "xmlformat.exe"
+    )
+    local bin = file_exists(mason_exe) and mason_exe or executable("xmlformat")
+    cmd = {
+      bin,
+      "--indent",
+      tostring(config.xmlformatter.indent_size),
+      "--indent-char",
+      " ",
+      "--encoding",
+      "UTF-8",
+      "--outencoding",
+      "UTF-8",
       "-",
     }
   elseif kind == "typstyle" then
