@@ -83,29 +83,37 @@ local function prettier_command(filename)
     return { shim }
   end
   error(
-    "Cannot find Prettier's JavaScript entrypoint. Install it through Mason or set prettier_cli in so/formatting/config.lua.",
+    "Cannot find Prettier's JavaScript entrypoint. "
+    .."Install it through Mason or set prettier_cli in so/formatting/config.lua.",
     0
   )
 end
-
 
 -- Run Java directly: Mason's Windows .cmd launcher cannot be spawned by vim.system.
 local function ktfmt_command(filename)
   local options = config.ktfmt or {}
   local jar = options.jar
   if jar then
-    if not file_exists(jar) then error("ktfmt.jar does not exist: " .. jar, 0) end
+    if not file_exists(jar) then
+      error("ktfmt.jar does not exist: " .. jar, 0)
+    end
   else
     local root = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "packages", "ktfmt")
     local candidates = {}
     for _, path in ipairs(vim.fn.globpath(root, "**/*.jar", false, true)) do
       local name = vim.fs.basename(path):lower()
-      if file_exists(path) and (name == "ktfmt.jar" or name:match("^ktfmt.*with%-dependencies%.jar$")) then
+      if
+        file_exists(path)
+        and (name == "ktfmt.jar" or name:match("^ktfmt.*with%-dependencies%.jar$"))
+      then
         candidates[#candidates + 1] = path
       end
     end
     if #candidates ~= 1 then
-      error("Cannot identify Mason's ktfmt JAR. Run :MasonInstall ktfmt, or set ktfmt.jar in so/formatting/config.lua.", 0)
+      error(
+        "Cannot identify Mason's ktfmt JAR. Run :MasonInstall ktfmt, or set ktfmt.jar in so/formatting/config.lua.",
+        0
+      )
     end
     jar = candidates[1]
   end
@@ -113,16 +121,22 @@ local function ktfmt_command(filename)
   if not java and vim.env.JAVA_HOME and vim.env.JAVA_HOME ~= "" then
     local name = vim.fn.has("win32") == 1 and "java.exe" or "java"
     local candidate = vim.fs.joinpath(vim.env.JAVA_HOME, "bin", name)
-    if file_exists(candidate) then java = candidate end
+    if file_exists(candidate) then
+      java = candidate
+    end
   end
   java = java or vim.fn.exepath("java")
-  if java == "" then error("Java not found. Install a JDK or set ktfmt.java to java.exe, then restart Neovim.", 0) end
+  if java == "" then
+    error("Java not found. Install a JDK or set ktfmt.java to java.exe, then restart Neovim.", 0)
+  end
   local style = options.style or "kotlinlang"
   if style ~= "kotlinlang" and style ~= "google" then
     error('ktfmt.style must be "kotlinlang" or "google".', 0)
   end
   local cmd = { java, "-Dfile.encoding=UTF-8", "-jar", jar, "--" .. style .. "-style" }
-  if config.use_project_config then table.insert(cmd, "--enable-editorconfig") end
+  if config.use_project_config then
+    table.insert(cmd, "--enable-editorconfig")
+  end
   -- stdin preserves unsaved edits; the filename also identifies Kotlin scripts.
   vim.list_extend(cmd, { "--stdin-name=" .. filename, "-" })
   return cmd
@@ -163,11 +177,22 @@ function M.command(buf)
     if not config.use_project_config then
       table.insert(cmd, "--style=file:" .. rules("clang-format.yaml"))
     end
+  elseif kind == "beautysh" then
+    cmd = {
+      executable("beautysh"),
+      "--indent-size",
+      tostring(config.beautysh.indent_size),
+      "-",
+    }
   elseif kind == "typstyle" then
     cmd = { executable("typstyle") }
     if not config.use_project_config then
-      vim.list_extend(cmd, { "--indent-width", tostring(config.typstyle.indent_width),
-        "--line-width", tostring(config.typstyle.line_width) })
+      vim.list_extend(cmd, {
+        "--indent-width",
+        tostring(config.typstyle.indent_width),
+        "--line-width",
+        tostring(config.typstyle.line_width),
+      })
     end
   else
     error("Unknown formatter: " .. tostring(kind), 0)
