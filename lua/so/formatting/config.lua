@@ -24,9 +24,10 @@ return {
     kotlin = "ktfmt", -- Both .kt and .kts use Neovim filetype kotlin.
     sh = "beautysh",
     xml = "xmlformatter",
+    sql = "sql-formatter",
   },
   -- Only these formatter executables are needed by this feature.
-  install = { "prettier", "ruff", "stylua", "clang-format", "typstyle", "ktfmt", "beautysh" },
+  install = { "prettier", "ruff", "stylua", "clang-format", "typstyle", "ktfmt", "beautysh" , "sql-formatter"},
   beautysh = { indent_size = 2 },
   typstyle = { indent_width = 2, line_width = 100 },
   ktfmt = {

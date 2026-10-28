@@ -208,6 +208,28 @@ function M.command(buf)
       "UTF-8",
       "-",
     }
+  elseif kind == "sql-formatter" then
+    -- Run Node directly to avoid Windows .cmd shims.
+    local cli = vim.fs.joinpath(
+      vim.fn.stdpath("data"),
+      "mason",
+      "packages",
+      "sql-formatter",
+      "node_modules",
+      "sql-formatter",
+      "bin",
+      "sql-formatter-cli.cjs"
+    )
+    if not file_exists(cli) then
+      error("Cannot find SQL Formatter. Run :MasonInstall sql-formatter", 0)
+    end
+    cmd = { executable("node"), cli }
+    if not config.use_project_config then
+      vim.list_extend(cmd, {
+        "--config",
+        rules("sql-formatter.json"),
+      })
+    end
   elseif kind == "typstyle" then
     cmd = { executable("typstyle") }
     if not config.use_project_config then
