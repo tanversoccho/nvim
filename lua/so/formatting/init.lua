@@ -88,6 +88,46 @@ local function prettier_command(filename)
   )
 end
 
+
+-- Run Java directly: Mason's Windows .cmd launcher cannot be spawned by vim.system.
+local function ktfmt_command(filename)
+  local options = config.ktfmt or {}
+  local jar = options.jar
+  if jar then
+    if not file_exists(jar) then error("ktfmt.jar does not exist: " .. jar, 0) end
+  else
+    local root = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "packages", "ktfmt")
+    local candidates = {}
+    for _, path in ipairs(vim.fn.globpath(root, "**/*.jar", false, true)) do
+      local name = vim.fs.basename(path):lower()
+      if file_exists(path) and (name == "ktfmt.jar" or name:match("^ktfmt.*with%-dependencies%.jar$")) then
+        candidates[#candidates + 1] = path
+      end
+    end
+    if #candidates ~= 1 then
+      error("Cannot identify Mason's ktfmt JAR. Run :MasonInstall ktfmt, or set ktfmt.jar in so/formatting/config.lua.", 0)
+    end
+    jar = candidates[1]
+  end
+  local java = options.java
+  if not java and vim.env.JAVA_HOME and vim.env.JAVA_HOME ~= "" then
+    local name = vim.fn.has("win32") == 1 and "java.exe" or "java"
+    local candidate = vim.fs.joinpath(vim.env.JAVA_HOME, "bin", name)
+    if file_exists(candidate) then java = candidate end
+  end
+  java = java or vim.fn.exepath("java")
+  if java == "" then error("Java not found. Install a JDK or set ktfmt.java to java.exe, then restart Neovim.", 0) end
+  local style = options.style or "kotlinlang"
+  if style ~= "kotlinlang" and style ~= "google" then
+    error('ktfmt.style must be "kotlinlang" or "google".', 0)
+  end
+  local cmd = { java, "-Dfile.encoding=UTF-8", "-jar", jar, "--" .. style .. "-style" }
+  if config.use_project_config then table.insert(cmd, "--enable-editorconfig") end
+  -- stdin preserves unsaved edits; the filename also identifies Kotlin scripts.
+  vim.list_extend(cmd, { "--stdin-name=" .. filename, "-" })
+  return cmd
+end
+
 function M.command(buf)
   local kind = config.formatters[vim.bo[buf].filetype]
   if not kind then
@@ -104,6 +144,8 @@ function M.command(buf)
     if not config.use_project_config then
       vim.list_extend(cmd, { "--config", rules("prettier.json"), "--no-editorconfig" })
     end
+  elseif kind == "ktfmt" then
+    cmd = ktfmt_command(filename)
   elseif kind == "ruff" then
     cmd = { executable("ruff"), "format", "--stdin-filename", filename }
     if not config.use_project_config then
@@ -130,7 +172,8 @@ function M.command(buf)
   else
     error("Unknown formatter: " .. tostring(kind), 0)
   end
-  return cmd, filename
+  local timeout_ms = kind == "ktfmt" and (config.ktfmt or {}).timeout_ms or nil
+  return cmd, filename, timeout_ms or config.timeout_ms
 end
 
 function M.format(buf)
@@ -139,7 +182,7 @@ function M.format(buf)
     if vim.bo[buf].buftype ~= "" or not vim.bo[buf].modifiable then
       error("Buffer is not an editable source file.", 0)
     end
-    local cmd, filename = M.command(buf)
+    local cmd, filename, timeout_ms = M.command(buf)
     local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
     local input = table.concat(lines, "\n") .. (vim.bo[buf].endofline and "\n" or "")
     local result = vim
@@ -148,7 +191,7 @@ function M.format(buf)
         text = true,
         cwd = vim.fs.dirname(filename),
       })
-      :wait(config.timeout_ms)
+      :wait(timeout_ms)
     if result.code ~= 0 then
       error(
         (result.stderr and result.stderr ~= "" and result.stderr)

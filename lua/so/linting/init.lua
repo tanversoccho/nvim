@@ -2,7 +2,7 @@
 -- nvim-lint runs the extra Lua/HTML command-line linters.
 vim.pack.add({ "https://github.com/mfussenegger/nvim-lint" })
 local lint = require("lint")
-local languages = { "python", "lua", "html", "javascript", "powershell" }
+local languages = { "python", "lua", "html", "javascript", "powershell" ,"kotlin"}
 for _, name in ipairs(languages) do
   require("so.linting." .. name)
 end

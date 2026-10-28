@@ -21,10 +21,17 @@ return {
     c = "clang-format",
     cpp = "clang-format",
     typst = "typstyle",
+    kotlin = "ktfmt", -- Both .kt and .kts use Neovim filetype kotlin.
   },
   -- Only these formatter executables are needed by this feature.
-  install = { "prettier", "ruff", "stylua", "clang-format", "typstyle" },
+  install = { "prettier", "ruff", "stylua", "clang-format", "typstyle", "ktfmt" },
   typstyle = { indent_width = 2, line_width = 100 },
+  ktfmt = {
+    style = "kotlinlang", -- "kotlinlang": 4-space blocks; "google": 2-space blocks.
+    jar = nil,            -- Optional absolute path; otherwise find Mason's ktfmt JAR.
+    java = nil,           -- Optional java.exe path; otherwise JAVA_HOME, then PATH.
+    timeout_ms = 15000,   -- Allow for JVM startup without changing other formatters.
+  },
   -- Optional cleanup: only :SoFormatToolsClean uninstalls these packages.
   -- Language servers and your current Lua/HTML linters are preserved.
   retire = {
