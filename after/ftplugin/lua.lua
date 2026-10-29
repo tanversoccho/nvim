@@ -1,5 +1,6 @@
 -- Applies only to Lua buffers.
 
+-- Filetype-specific settings take precedence over global defaults.
 -- Use spaces, with two spaces per indentation level.
 vim.bo.expandtab = true
 vim.bo.shiftwidth = 2

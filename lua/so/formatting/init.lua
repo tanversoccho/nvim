@@ -386,8 +386,8 @@ local function configure(buf)
   if vim.bo[buf].buftype ~= "" or not config.formatters[vim.bo[buf].filetype] then
     return
   end
-  vim.bo[buf].formatexpr = "v:lua.require'so.formatting'.formatexpr()"
-  vim.bo[buf].formatprg = ""
+  -- Do not hijack gq: it should format the selected text, not the entire file.
+  -- :SoFormat / <leader>cf remain the intentional whole-file commands.
   vim.keymap.set("n", "<leader>cf", function()
     M.format(buf)
   end, { buffer = buf, desc = "Format file using your formatter rules" })

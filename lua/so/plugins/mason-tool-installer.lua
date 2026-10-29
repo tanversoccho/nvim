@@ -11,7 +11,7 @@ require("mason-tool-installer").setup({
   },
   run_on_start = true,
   start_delay = 1000,
-  debounce_hours = 0,
+  debounce_hours = 24, -- Avoid repeated tool checks in every editing session.
   auto_update = false,
   integrations = {
     ["mason-lspconfig"] = false,

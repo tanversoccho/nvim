@@ -38,8 +38,8 @@ vim.opt.wildmode = "noselect:full"
 vim.opt.signcolumn = "yes"
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
-vim.opt.scrolloff = 99
-vim.opt.tabstop = 4
+vim.opt.scrolloff = 8
+vim.opt.tabstop = 2
 vim.opt.timeoutlen = 300
 vim.opt.updatetime = 250
 
@@ -52,7 +52,7 @@ vim.opt.listchars = {
   precedes = "↩", -- Line wrap indicator
 }
 vim.opt.inccommand = "split"
-vim.opt.foldmethod = "marker"
+vim.opt.foldmethod = "marker" -- Keep existing manual folds
 vim.opt.completeopt = "menu,menuone,noselect,popup"
 
 -- Enable diagnostic signs in gutter
@@ -67,7 +67,7 @@ vim.diagnostic.config({
 vim.fn.sign_define("DiagnosticSignError", { text = "✘", texthl = "DiagnosticSignError" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "⚠", texthl = "DiagnosticSignWarn" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "•", texthl = "DiagnosticSignHint" })
 
 require("vim._core.ui2").enable({
   enable = true,
