@@ -130,7 +130,10 @@ local function ktfmt_command(filename, indent)
     error("Java not found. Install a JDK or set ktfmt.java to java.exe, then restart Neovim.", 0)
   end
   if not indent.spaces or (indent.width ~= 2 and indent.width ~= 4) then
-    error("ktfmt requires expandtab and shiftwidth=2 (Google) or 4 (Kotlinlang). Buffer preserved.", 0)
+    error(
+      "ktfmt requires expandtab and shiftwidth=2 (Google) or 4 (Kotlinlang). Buffer preserved.",
+      0
+    )
   end
   local style = indent.width == 2 and "google" or "kotlinlang"
   local cmd = { java, "-Dfile.encoding=UTF-8", "-jar", jar, "--" .. style .. "-style" }
@@ -143,7 +146,9 @@ end
 -- Later :setlocal or EditorConfig changes are respected as well.
 local function indentation(buf)
   local width = vim.bo[buf].shiftwidth
-  if width == 0 then width = vim.bo[buf].tabstop end
+  if width == 0 then
+    width = vim.bo[buf].tabstop
+  end
   return {
     width = math.max(1, width),
     tabstop = vim.bo[buf].tabstop,
@@ -153,11 +158,15 @@ end
 
 local function read_json(path)
   local fd, err = io.open(path, "rb")
-  if not fd then error("Cannot read formatter rules: " .. tostring(err), 0) end
+  if not fd then
+    error("Cannot read formatter rules: " .. tostring(err), 0)
+  end
   local contents = fd:read("*a")
   fd:close()
   local decoded = vim.json.decode(contents)
-  if type(decoded) ~= "table" then error("Expected a JSON object in " .. path, 0) end
+  if type(decoded) ~= "table" then
+    error("Expected a JSON object in " .. path, 0)
+  end
   return decoded
 end
 
@@ -165,12 +174,18 @@ end
 local function clang_command(filename, indent, buf)
   local bin = executable("clang-format")
   local style = config.use_project_config and "file" or ("file:" .. rules("clang-format.yaml"))
-  local result = vim.system({ bin, "--assume-filename=" .. filename,
-    "--style=" .. style, "--dump-config" }, {
-    text = true, cwd = vim.fs.dirname(filename),
-  }):wait(config.timeout_ms)
+  local result = vim
+    .system({ bin, "--assume-filename=" .. filename, "--style=" .. style, "--dump-config" }, {
+      text = true,
+      cwd = vim.fs.dirname(filename),
+    })
+    :wait(config.timeout_ms)
   if result.code ~= 0 or not result.stdout or result.stdout == "" then
-    error((result.stderr and result.stderr ~= "" and result.stderr) or "Cannot resolve clang-format style.", 0)
+    error(
+      (result.stderr and result.stderr ~= "" and result.stderr)
+        or "Cannot resolve clang-format style.",
+      0
+    )
   end
   local yaml = result.stdout
   local values = {
@@ -178,20 +193,31 @@ local function clang_command(filename, indent, buf)
     TabWidth = tostring(indent.tabstop),
     UseTab = indent.spaces and "Never" or "ForIndentation",
   }
-  for key, value in pairs(values) do
-    local count
-    yaml, count = yaml:gsub("([\r\n])" .. key .. ":[^\r\n]*", "%1" .. key .. ": " .. value)
-    if count == 0 then error("clang-format did not report " .. key, 0) end
+  for key, value in pairs(values or {}) do
+    if key ~= nil and value ~= nil then
+      local count
+      yaml, count = (yaml or ""):gsub(
+        "([\r\n])" .. tostring(key) .. ":[^\r\n]*",
+        "%1" .. tostring(key) .. ": " .. tostring(value)
+      )
+      if count == 0 then
+        error("clang-format did not report " .. tostring(key), 0)
+      end
+    end
   end
   -- clang-format accepts a YAML file here, not a block-style YAML argument.
   local cache = vim.fs.joinpath(vim.fn.stdpath("cache"), "so-format-clang")
   vim.fn.mkdir(cache, "p")
   local path = vim.fs.joinpath(cache, tostring(vim.fn.getpid()) .. "-" .. buf .. ".yaml")
   local fd, err = io.open(path, "wb")
-  if not fd then error("Cannot write resolved clang-format rules: " .. tostring(err), 0) end
+  if not fd then
+    error("Cannot write resolved clang-format rules: " .. tostring(err), 0)
+  end
   local written, write_err = fd:write(yaml)
   fd:close()
-  if not written then error("Cannot write clang-format rules: " .. tostring(write_err), 0) end
+  if not written then
+    error("Cannot write clang-format rules: " .. tostring(write_err), 0)
+  end
   return { bin, "--assume-filename=" .. filename, "--style=file:" .. path }
 end
 
@@ -217,7 +243,8 @@ function M.command(buf)
       vim.list_extend(cmd, { "--config", rules("prettier.json"), "--no-editorconfig" })
     end
     vim.list_extend(cmd, {
-      "--tab-width", tostring(indent.width),
+      "--tab-width",
+      tostring(indent.width),
       indent.spaces and "--no-use-tabs" or "--use-tabs",
     })
   elseif kind == "ktfmt" then
@@ -228,8 +255,10 @@ function M.command(buf)
       vim.list_extend(cmd, { "--config", rules("ruff.toml") })
     end
     vim.list_extend(cmd, {
-      "--config", "indent-width=" .. indent.width,
-      "--config", 'format.indent-style="' .. (indent.spaces and "space" or "tab") .. '"',
+      "--config",
+      "indent-width=" .. indent.width,
+      "--config",
+      'format.indent-style="' .. (indent.spaces and "space" or "tab") .. '"',
       "-",
     })
   elseif kind == "stylua" then
@@ -238,8 +267,10 @@ function M.command(buf)
       vim.list_extend(cmd, { "--config-path", rules("stylua.toml") })
     end
     vim.list_extend(cmd, {
-      "--indent-type", indent.spaces and "Spaces" or "Tabs",
-      "--indent-width", tostring(indent.spaces and indent.width or indent.tabstop),
+      "--indent-type",
+      indent.spaces and "Spaces" or "Tabs",
+      "--indent-width",
+      tostring(indent.spaces and indent.width or indent.tabstop),
       "-",
     })
   elseif kind == "clang-format" then
@@ -250,7 +281,9 @@ function M.command(buf)
     cwd = vim.fs.joinpath(vim.fn.stdpath("cache"), "so-format-beautysh")
     vim.fn.mkdir(cwd, "p")
     cmd = { executable("beautysh"), "--indent-size", tostring(indent.width) }
-    if not indent.spaces then table.insert(cmd, "--tab") end
+    if not indent.spaces then
+      table.insert(cmd, "--tab")
+    end
     table.insert(cmd, "-")
   elseif kind == "xmlformatter" then
     -- Mason's package name differs from its executable name.
@@ -299,9 +332,14 @@ function M.command(buf)
       local dir = vim.fs.dirname(filename)
       while dir do
         local path = vim.fs.joinpath(dir, ".sql-formatter.json")
-        if file_exists(path) then opts = read_json(path); break end
+        if file_exists(path) then
+          opts = read_json(path)
+          break
+        end
         local parent = vim.fs.dirname(dir)
-        if parent == dir then break end
+        if parent == dir then
+          break
+        end
         dir = parent
       end
     end
@@ -410,9 +448,14 @@ function M.setup()
     local ok, cmd = pcall(M.command, vim.api.nvim_get_current_buf())
     if ok then
       local indent = indentation(vim.api.nvim_get_current_buf())
-      vim.notify(("Indentation: shiftwidth=%d, tabstop=%d, %s\n%s"):format(
-        indent.width, indent.tabstop, indent.spaces and "spaces" or "tabs", vim.inspect(cmd)
-      ))
+      vim.notify(
+        ("Indentation: shiftwidth=%d, tabstop=%d, %s\n%s"):format(
+          indent.width,
+          indent.tabstop,
+          indent.spaces and "spaces" or "tabs",
+          vim.inspect(cmd)
+        )
+      )
     else
       vim.notify(tostring(cmd), vim.log.levels.WARN)
     end
