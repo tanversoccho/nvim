@@ -56,8 +56,8 @@ local function with_rg(fn)
     fn()
   end
 end
-bind("<leader><leader>", builtin.builtin, "Telescope pickers")
-bind("<leader>fd", builtin.find_files, "Find files (including dotfiles)")
+bind("<leader>fd", builtin.builtin, "Telescope pickers")
+bind("<leader><leader>", builtin.find_files, "Find files (including dotfiles)")
 bind("<leader>fk", builtin.keymaps, "Find keymaps")
 bind("<leader>fh", builtin.help_tags, "Find help")
 bind("<leader>fw", with_rg(builtin.grep_string), "Find word under cursor")

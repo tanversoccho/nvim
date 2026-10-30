@@ -12,6 +12,14 @@ function M.setup()
       vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
     end
   end
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "TelescopePrompt",
+    callback = function(args)
+      vim.bo[args.buf].autocomplete = false
+      vim.bo[args.buf].completefunc = ""
+      vim.bo[args.buf].omnifunc = ""
+    end,
+  })
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("so-native-completion", { clear = true }),
     callback = function(args)
