@@ -29,7 +29,12 @@ telescope.setup({
     },
   },
   pickers = {
-    find_files = { hidden = true },
+    find_files = {  hidden = true },
+    builtin = {
+      previewer = false,
+      layout_config = { prompt_position = "bottom" },
+    },
+    colorscheme = { theme = "dropdown" },
     buffers = {
       sort_mru = true,
       ignore_current_buffer = true,
@@ -60,6 +65,7 @@ bind("<leader><leader>", builtin.resume, "Resume last picker")
 bind("<leader>ff", builtin.find_files, "Find files (including dotfiles)")
 bind("<leader>fb", builtin.builtin, "Telescope pickers")
 bind("<leader>fk", builtin.keymaps, "Find keymaps")
+bind("<leader>ft", builtin.tags, "Find tags")
 bind("<leader>fh", builtin.help_tags, "Find help")
 bind("<leader>fw", with_rg(builtin.grep_string), "Find word under cursor")
 bind("<leader>fg", with_rg(builtin.live_grep), "Live grep")
@@ -73,7 +79,7 @@ bind("<leader>m", builtin.marks, "Find marks")
 bind("<leader>fs", builtin.lsp_document_symbols, "Find document symbols")
 bind("<leader>fr", builtin.lsp_references, "Find LSP references")
 bind("<leader>fc", builtin.commands, "Find commands")
-bind("<leader>ft", builtin.colorscheme, "Find themes")
+bind("<leader>tt", builtin.colorscheme, "Find themes")
 bind("<leader>/", builtin.current_buffer_fuzzy_find, "Search current buffer")
 bind(
   "<leader>f/",
