@@ -1,6 +1,5 @@
 -- Native LSP handles Ruff, ESLint and PowerShell analysis.
 -- nvim-lint runs the extra Lua/HTML command-line linters.
-vim.pack.add({ "https://github.com/mfussenegger/nvim-lint" })
 local lint = require("lint")
 local languages = { "python", "lua", "html", "javascript", "powershell" ,"kotlin"}
 for _, name in ipairs(languages) do
