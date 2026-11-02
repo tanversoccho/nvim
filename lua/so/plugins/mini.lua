@@ -1,7 +1,7 @@
 -- ~/.config/nvim/lua/plugins/mini-config.lua
 local bracketed = require("mini.bracketed")
 local surround = require("mini.surround")
-local indentscope = require("mini.indentscope")
+local pairs = require("mini.pairs")
 
 -- ------------------------------------------------------------
 -- 1. mini.bracketed: The "[ ]" navigation engine
@@ -86,5 +86,29 @@ surround.setup({
         right = "**",
       },
     },
+  },
+})
+-- ------------------------------------------------------------
+-- 3. mini.pairs: Automatic bracket and quote pairs
+-- ------------------------------------------------------------
+pairs.setup({
+  modes = {
+    insert = true,
+    command = false,
+    terminal = false,
+  },
+
+  mappings = {
+    ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\]." },
+    ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\]." },
+    ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\]." },
+
+    [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
+    ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },
+    ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\]." },
+
+    ['"'] = { action = "closeopen", pair = '""', neigh_pattern = '[^%w\\].' },
+    ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%w\\]." },
+    ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%w\\]." },
   },
 })
