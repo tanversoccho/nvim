@@ -11,7 +11,6 @@ vim.g.loaded_ruby_provider = 0
 --basic options
 vim.opt.number = true
 vim.opt.relativenumber = false
-vim.opt.autocomplete = true
 vim.opt.breakindent = true
 vim.opt.confirm = true
 vim.opt.cursorline = true
@@ -26,7 +25,7 @@ vim.opt.splitright = true
 vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.wildmenu = true
-vim.opt.wrap = false
+vim.opt.wrap = true
 vim.opt.mouse = "a"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.winborder = "rounded"
@@ -38,8 +37,8 @@ vim.opt.wildmode = "noselect:full"
 vim.opt.signcolumn = "yes"
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
-vim.opt.scrolloff = 99
-vim.opt.tabstop = 4
+vim.opt.scrolloff = 8
+vim.opt.tabstop = 2
 vim.opt.timeoutlen = 300
 vim.opt.updatetime = 250
 
@@ -52,8 +51,8 @@ vim.opt.listchars = {
   precedes = "↩", -- Line wrap indicator
 }
 vim.opt.inccommand = "split"
-vim.opt.foldmethod = "marker"
-vim.opt.completeopt = "menu,menuone,noselect"
+vim.opt.foldmethod = "marker" -- Keep existing manual folds
+vim.opt.completeopt = "menu,menuone,noselect,popup"
 
 -- Enable diagnostic signs in gutter
 vim.diagnostic.config({
@@ -67,5 +66,15 @@ vim.diagnostic.config({
 vim.fn.sign_define("DiagnosticSignError", { text = "✘", texthl = "DiagnosticSignError" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "⚠", texthl = "DiagnosticSignWarn" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "•", texthl = "DiagnosticSignHint" })
 
+require("vim._core.ui2").enable({
+  enable = true,
+  msg = {
+    target = "cmd",
+    pager = { height = 0.5 },
+    dialog = { height = 0.5 },
+    cmd = { height = 0.5 },
+    msg = { height = 0.5, timeout = 4500 },
+  },
+})

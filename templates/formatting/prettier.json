@@ -1,0 +1,20 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "printWidth": 100,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": ["*.html", "*.htm"],
+      "options": {
+        "singleAttributePerLine": true,
+        "htmlWhitespaceSensitivity": "css",
+        "bracketSameLine": false
+      }
+    },
+    {
+      "files": ["*.js", "*.mjs", "*.cjs", "*.jsx", "*.ts", "*.tsx"],
+      "options": { "singleQuote": true, "semi": true, "trailingComma": "all" }
+    }
+  ]
+}
