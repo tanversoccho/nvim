@@ -7,9 +7,9 @@ function M.setup()
   local function attach(client, buf)
     if client and client:supports_method("textDocument/completion", buf) then
       vim.bo[buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-      -- Core autocomplete handles normal words; LSP also reacts to server trigger
-      -- characters, such as '.'; native completion applies snippets/import edits.
-      vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
+      -- Native 'autocomplete' with 'complete=o' requests LSP omni items.
+      -- Do not also enable a separate LSP completion autotrigger here:
+      -- two competing sources can make the popup behave inconsistently.
     end
   end
   vim.api.nvim_create_autocmd("FileType", {
@@ -61,8 +61,11 @@ function M.setup()
     return "<S-Tab>"
   end, { expr = true, desc = "Previous completion / native snippet field" })
   vim.keymap.set("i", "<C-Space>", function()
-    vim.lsp.completion.get()
-  end, { desc = "Request native LSP completion" })
+    if #vim.lsp.get_clients({ bufnr = 0, method = "textDocument/completion" }) > 0 then
+      return "<C-x><C-o>"
+    end
+    return "<C-n>"
+  end, { expr = true, desc = "Request LSP omni completion or buffer words" })
   local retired = {
     ["blink.cmp"] = true,
     ["nvim-cmp"] = true,
