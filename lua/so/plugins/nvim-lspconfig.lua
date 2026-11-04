@@ -1,36 +1,13 @@
--- Neovim 0.12 native LSP setup (without mason-lspconfig.nvim).
--- nvim-lspconfig supplies server definitions in its lsp/ directory.
--- Mason is configured earlier in so.plugins.init and adds its bin/ to PATH.
+-- Neovim native LSP configuration (0.12+).
+-- Server-specific overrides live in after/lsp/<server>.lua.
+-- nvim-lspconfig provides default server definitions on runtimepath.
+-- Mason must be initialized before this file (see so.plugins.init).
 
 vim.lsp.config("*", {
   capabilities = vim.lsp.protocol.make_client_capabilities(),
 })
 
-vim.lsp.config("lua_ls", {
-  settings = {
-    Lua = {
-      runtime = { version = "LuaJIT" },
-      completion = { callSnippet = "Replace" },
-      diagnostics = { globals = { "vim" } },
-      workspace = {
-        checkThirdParty = false,
-        library = {
-          vim.env.VIMRUNTIME,
-          vim.fn.stdpath("config") .. "/lua",
-        },
-      },
-      telemetry = { enable = false },
-    },
-  },
-})
-
-vim.lsp.config("tinymist", {
-  settings = { formatterMode = "typstyle" },
-})
-
--- These names match the configs provided by nvim-lspconfig.
--- A server starts only when its executable is available and its
--- filetype/workspace conditions are satisfied.
+-- Enabling a server does not install it. Mason's tool installer handles tools.
 vim.lsp.enable({
   "lua_ls",
   "clangd",
