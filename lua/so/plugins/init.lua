@@ -1,4 +1,5 @@
 -- Explicit order keeps dependencies predictable. New plugin configs must be listed here.
+require("so.plugins.treesitter")
 require("so.plugins.todo-comments")
 require("so.plugins.mini")
 require("so.plugins.so-statusline")
@@ -16,7 +17,6 @@ require("so.plugins.vim-dadbod-ui")
 require("so.plugins.nvim-colorizer")
 require("so.plugins.nvim-web-devicons")
 require("so.plugins.plenary")
-require("so.plugins.treesitter")
 require("so.plugins.nvim-lspconfig")
 require("so.plugins.mason-tool-installer")
 
