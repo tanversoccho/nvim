@@ -36,3 +36,28 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { buffer = args.buf })
   end,
 })
+
+vim.api.nvim_create_user_command("Cpwd", function()
+  local bufpath = vim.api.nvim_buf_get_name(0)
+  if bufpath == "" then
+    vim.notify("Buffer is unnamed", vim.log.levels.WARN)
+    return
+  end
+
+  local dir
+  if vim.fn.isdirectory(bufpath) == 1 then
+    dir = vim.fn.fnamemodify(bufpath, ":p")
+  else
+    dir = vim.fn.fnamemodify(bufpath, ":p:h")
+  end
+
+  dir = vim.fn.resolve(dir)
+
+  if vim.fn.isdirectory(dir) == 0 then
+    vim.notify("Not a valid directory: " .. dir, vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd.cd(vim.fn.fnameescape(dir))
+  vim.notify("cwd → " .. vim.fn.getcwd(), vim.log.levels.INFO)
+end, { desc = "cd to current buffer's directory" })
