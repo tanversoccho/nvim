@@ -37,6 +37,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- NOTE: might change later 
 vim.api.nvim_create_user_command("Cpwd", function()
   local bufpath = vim.api.nvim_buf_get_name(0)
   if bufpath == "" then
