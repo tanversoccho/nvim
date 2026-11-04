@@ -2,9 +2,7 @@ local map = vim.keymap.set
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 map({ "v", "n" }, ":", ";", { desc = "Enter command line" })
 map({ "v", "n" }, ";", ":", { desc = "Repeat f/t motion" })
-map("n", "\\=", "<cmd>SoFormat<CR>", {
-  desc = "Format current file",
-})
+map("n", "\\=", "<cmd>SoFormat<CR>", { desc = "Format current file", })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 map("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
 map("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
@@ -25,9 +23,4 @@ map("n", "<A-up>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Mo
 map("i", "<A-down>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 map("i", "<A-up>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 map("v", "<A-down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
-map(
-  "v",
-  "<A-up>",
-  ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv",
-  { desc = "Move Up" }
-)
+map( "v", "<A-up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
