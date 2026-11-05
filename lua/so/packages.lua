@@ -21,6 +21,7 @@ vim.pack.add({
   "https://github.com/norcalli/nvim-colorizer.lua",
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/stevearc/conform.nvim",
   "https://github.com/nvim-tree/nvim-web-devicons",
   "https://github.com/tpope/vim-dadbod",
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
