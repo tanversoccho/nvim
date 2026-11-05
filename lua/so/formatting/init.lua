@@ -324,15 +324,15 @@ function M.command(buf)
     if not file_exists(cli) then
       error("Cannot find SQL Formatter. Run :MasonInstall sql-formatter", 0)
     end
-    -- Default SQL rules are maintained in Lua, not templates/formatting.
+    -- Merge default rules, optional project rules, and SQL buffer-local rules.
+    -- The buffer-local options are set by after/ftplugin/sql.lua.
     local opts = vim.deepcopy(require("so.formatting.sql"))
     if config.use_project_config then
-      -- Match SQL Formatter's upward .sql-formatter.json discovery.
       local dir = vim.fs.dirname(filename)
       while dir do
         local path = vim.fs.joinpath(dir, ".sql-formatter.json")
         if file_exists(path) then
-          opts = read_json(path)
+          opts = vim.tbl_deep_extend("force", opts, read_json(path))
           break
         end
         local parent = vim.fs.dirname(dir)
@@ -342,8 +342,27 @@ function M.command(buf)
         dir = parent
       end
     end
-    opts.tabWidth, opts.useTabs = indent.width, not indent.spaces
-    cmd = { executable("node"), cli, "--config", vim.json.encode(opts) }
+
+    local buffer_rules = vim.b[buf].so_sql_format
+    if buffer_rules ~= nil then
+      if type(buffer_rules) ~= "table" then
+        error("b:so_sql_format must be a table (set it in after/ftplugin/sql.lua).", 0)
+      end
+      opts = vim.tbl_deep_extend("force", opts, buffer_rules)
+    end
+
+    -- Effective buffer indentation always wins (including :setlocal overrides).
+    opts.tabWidth = indent.width
+    opts.useTabs = not indent.spaces
+    local dialect = opts.language or "sql"
+    if type(dialect) ~= "string" or dialect == "" then
+      error("SQL formatter language must be a nonempty dialect name.", 0)
+    end
+    cmd = {
+      executable("node"), cli,
+      "--language", dialect,
+      "--config", vim.json.encode(opts),
+    }
   elseif kind == "typstyle" then
     if not indent.spaces then
       error("typstyle only supports space indentation. Enable expandtab for Typst.", 0)
