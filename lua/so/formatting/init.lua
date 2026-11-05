@@ -324,10 +324,9 @@ function M.command(buf)
     if not file_exists(cli) then
       error("Cannot find SQL Formatter. Run :MasonInstall sql-formatter", 0)
     end
-    local opts = {}
-    if not config.use_project_config then
-      opts = read_json(rules("sql-formatter.json"))
-    else
+    -- Default SQL rules are maintained in Lua, not templates/formatting.
+    local opts = vim.deepcopy(require("so.formatting.sql"))
+    if config.use_project_config then
       -- Match SQL Formatter's upward .sql-formatter.json discovery.
       local dir = vim.fs.dirname(filename)
       while dir do
