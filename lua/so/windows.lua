@@ -8,3 +8,10 @@ if vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1 then
   end
   -- Preserve TERM from the terminal; never force it to "dumb".
 end
+
+vim.filetype.add({
+  extension = {
+    ps1 = 'ps1',
+    psm1 = 'ps1',
+  },
+})

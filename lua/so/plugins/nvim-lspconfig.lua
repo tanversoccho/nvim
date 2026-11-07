@@ -18,5 +18,4 @@ vim.lsp.enable({
   "eslint",
   "cssls",
   "html",
-  "powershell_es",
 })
