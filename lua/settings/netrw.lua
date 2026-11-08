@@ -5,6 +5,7 @@ vim.g.netrw_winsize = 20
 vim.g.netrw_preview = 1 -- Vertical preview.
 vim.g.netrw_alto = 0 -- Preview on the left.
 vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
+vim.g.netrw_keepdir = 0
 
 local function explore_here()
   local filename = vim.api.nvim_buf_get_name(0)

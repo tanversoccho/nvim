@@ -1,5 +1,6 @@
 -- Explicit order keeps dependencies predictable. New plugin configs must be listed here.
 require("so.plugins.treesitter")
+require("so.plugins.oil")
 require("so.plugins.todo-comments")
 require("so.plugins.mini")
 require("so.plugins.so-statusline")

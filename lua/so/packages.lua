@@ -13,6 +13,7 @@ vim.pack.add({
   "https://github.com/kristijanhusak/vim-dadbod-ui",
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/lukas-reineke/indent-blankline.nvim",
+  "https://github.com/stevearc/oil.nvim",
   -- "https://github.com/mason-org/mason-lspconfig.nvim",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/mfussenegger/nvim-dap",
